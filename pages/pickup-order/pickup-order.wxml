@@ -1,0 +1,44 @@
+<view class="page">
+  <view class="title">预约上门取衣</view>
+  <view class="subtitle">提交上门预约，门店取回验衣后按实际衣物结算。</view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{loading}}" class="empty">正在读取价目…</view>
+  <block wx:else>
+    <view class="section-title">上门信息</view>
+    <view class="surface form">
+      <view class="field"><text>联系人</text><input value="{{contactName}}" placeholder="请输入姓名" data-field="contactName" bindinput="input" maxlength="50" /></view>
+      <view class="field"><text>详细地址</text><textarea value="{{pickupAddress}}" placeholder="小区、楼栋、门牌号" data-field="pickupAddress" bindinput="input" maxlength="255" auto-height /></view>
+      <view class="field"><text>预约日期</text><picker mode="date" value="{{appointmentDate}}" start="{{appointmentDate}}" bindchange="selectDate"><view class="picker">{{appointmentDate}}</view></picker></view>
+      <view class="field"><text>时间段</text><picker range="{{slots}}" value="{{slotIndex}}" bindchange="selectSlot"><view class="picker">{{slots[slotIndex]}}</view></picker></view>
+      <view class="field"><text>备注</text><textarea value="{{remark}}" placeholder="门禁、取衣要求等（选填）" data-field="remark" bindinput="input" maxlength="500" auto-height /></view>
+    </view>
+
+    <view class="section-title">选择衣物 <text wx:if="{{memberCardType}}" class="member-badge">{{memberCardType}}会员价</text></view>
+    <scroll-view class="group-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="group-tabs-inner">
+        <button wx:for="{{groups}}" wx:key="key" class="group-tab {{activeGroup === item.key ? 'active' : ''}}" data-group="{{item.key}}" bindtap="selectGroup">{{item.label}}</button>
+      </view>
+    </scroll-view>
+    <view class="surface catalog">
+      <view wx:for="{{visibleCatalog}}" wx:key="id" class="catalog-row">
+        <view class="garment"><view>{{item.name}}</view><text>¥{{item.price}} / {{item.unit}}{{item.remark}} <text wx:if="{{item.member && item.price < item.originalPrice}}" class="original">¥{{item.originalPrice}}</text></text></view>
+        <view class="counter"><button size="mini" data-id="{{item.id}}" data-delta="-1" bindtap="changeQuantity">−</button><text>{{item.quantity}}</text><button size="mini" data-id="{{item.id}}" data-delta="1" bindtap="changeQuantity">＋</button></view>
+      </view>
+    </view>
+
+    <view class="notice">页面金额仅为预估，实际费用由门店验衣后确认。</view>
+
+    <view class="section-title">我的上门订单</view>
+    <view wx:if="{{!orders.length}}" class="surface empty">暂时没有上门取衣单</view>
+    <view wx:for="{{orders}}" wx:key="id" class="surface pickup-order">
+      <view><strong>{{item.statusLabel}}</strong><text>¥{{item.paidAmount || item.estimatedAmount}}</text></view>
+      <text>{{item.appointmentDate}} {{item.appointmentSlot}}</text>
+      <text>{{item.pickupAddress}}</text>
+    </view>
+
+    <view class="checkout-bar">
+      <view class="checkout-total"><strong>{{count}} 件 · ¥{{total}}</strong><text wx:if="{{memberCardType && count}}">已优惠 ¥{{discount}} · 上门免费</text><text wx:else>上门取衣免费</text></view>
+      <button class="primary checkout-button" loading="{{submitting}}" disabled="{{submitting || !count}}" bindtap="submit">提交预约</button>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,18 @@
+<view class="page">
+  <view class="title">我的订单</view>
+  <view class="tabs" role="tablist">
+    <view class="tab {{tab === 'current' ? 'active' : ''}}" data-tab="current" bindtap="selectTab" aria-role="tab" aria-label="进行中订单">进行中</view>
+    <view class="tab {{tab === 'history' ? 'active' : ''}}" data-tab="history" bindtap="selectTab" aria-role="tab" aria-label="历史订单">历史订单</view>
+  </view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{loading}}" class="empty">正在加载…</view>
+  <view wx:elif="{{!bound}}" class="surface empty"><view>请先在首页绑定手机号。</view><button class="secondary small" bindtap="goHome">前往首页</button></view>
+  <view wx:elif="{{!orders.length}}" class="surface empty">{{tab === 'current' ? '没有进行中的订单' : '还没有历史订单'}}</view>
+  <block wx:else>
+    <view wx:for="{{orders}}" wx:key="id" class="order-row" bindtap="openOrder" data-id="{{item.id}}" aria-role="button" aria-label="查看订单 {{item.orderNo}}，当前{{item.statusLabel}}">
+      <view class="row-main"><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.urgent}}" class="tag">加急</text></view>
+      <view class="meta">{{item.totalCount}} 件 · {{item.storeName}}</view>
+      <view class="bottom"><text class="mono">{{item.orderNo}}</text><text>{{item.receiveTime}}</text></view>
+    </view>
+  </block>
+</view>

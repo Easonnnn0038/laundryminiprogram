@@ -1,0 +1,4 @@
+{
+  "desc": "订单页面不允许被索引",
+  "rules": [{ "action": "disallow", "page": "*" }]
+}

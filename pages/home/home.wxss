@@ -1,0 +1,18 @@
+.masthead { padding: 20rpx 4rpx 28rpx; }
+.brand { display: block; margin-bottom: 28rpx; color: #6a4f18; font-weight: 700; }
+.bind-box { margin-top: 40rpx; padding: 40rpx; }
+.bind-title, .empty-title { margin-bottom: 12rpx; font-size: 34rpx; font-weight: 760; color: #18332c; }
+.bind-button { margin-top: 36rpx; }
+.loading { padding: 56rpx 0; color: #65736d; }
+.order { margin-bottom: 22rpx; padding: 32rpx; }
+.order-top { display: flex; align-items: center; justify-content: space-between; }
+.status { font-size: 38rpx; font-weight: 800; }
+.arrow { color: #77837e; font-size: 52rpx; line-height: 1; }
+.pickup { display: flex; align-items: baseline; justify-content: space-between; margin: 30rpx -32rpx 24rpx; padding: 26rpx 32rpx; background: #173f35; color: #fffefa; }
+.pickup-label { font-size: 25rpx; }
+.pickup-code { font-family: ui-monospace, monospace; font-size: 64rpx; font-weight: 850; letter-spacing: 12rpx; }
+.order-meta { margin-top: 26rpx; font-weight: 650; }
+.order-no, .time { margin-top: 10rpx; color: #65736d; font-size: 25rpx; }
+.order-no { font-family: ui-monospace, monospace; }
+.all-button { margin-top: 32rpx; }
+.retry { display: inline-block; margin-left: 18rpx; padding: 0 18rpx; background: transparent; color: #813b25; font-size: 26rpx; text-decoration: underline; }

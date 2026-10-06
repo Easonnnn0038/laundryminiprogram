@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/pickup-order/pickup-order",
+    "pages/orders/orders",
+    "pages/profile/profile",
+    "pages/order-detail/order-detail"
+  ],
+  "window": {
+    "navigationBarTitleText": "小木棒洗衣",
+    "navigationBarBackgroundColor": "#F7F4EC",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F4EC",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#73766F",
+    "selectedColor": "#173F35",
+    "backgroundColor": "#FFFEFA",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页" },
+      { "pagePath": "pages/pickup-order/pickup-order", "text": "下单" },
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

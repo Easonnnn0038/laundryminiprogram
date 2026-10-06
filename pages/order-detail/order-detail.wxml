@@ -1,0 +1,46 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="empty">正在加载订单…</view>
+  <view wx:elif="{{error}}" class="error">{{error}}</view>
+  <block wx:elif="{{order}}">
+    <view class="hero">
+      <view class="status">{{order.statusLabel}}<text wx:if="{{order.urgent}}" class="tag">加急</text></view>
+      <view class="order-no" bindtap="copyOrderNo" aria-role="button" aria-label="复制订单号 {{order.orderNo}}">{{order.orderNo}} · 点击复制</view>
+      <view wx:if="{{order.pickupCode}}" class="pickup">
+        <view>到店出示取衣码</view>
+        <view class="pickup-code">{{order.pickupCode}}</view>
+      </view>
+    </view>
+
+    <view class="section-title">订单进度</view>
+    <view class="progress">
+      <view wx:for="{{order.progress}}" wx:key="label" class="step {{item.done ? 'done' : ''}} {{item.current ? 'current' : ''}}">
+        <view class="dot"></view><text>{{item.label}}</text>
+      </view>
+    </view>
+
+    <view class="section-title">衣物明细 · {{order.totalCount}} 件</view>
+    <view class="surface items">
+      <view wx:for="{{order.items}}" wx:key="id" class="item">
+        <view><text class="item-name">{{item.categoryName}}</text><text class="item-state">{{item.statusLabel}}</text></view>
+        <view wx:if="{{item.color || item.brand}}" class="item-meta">{{item.color}} {{item.brand}}</view>
+        <view wx:if="{{item.special}}" class="special">特殊要求：{{item.special}}</view>
+      </view>
+    </view>
+
+    <view class="section-title">费用信息</view>
+    <view class="details">
+      <view><text>衣物原价</text><text>¥{{order.totalAmount}}</text></view>
+      <view><text>优惠</text><text>-¥{{order.discountAmount}}</text></view>
+      <view><text>加急费</text><text>¥{{order.urgentSurcharge}}</text></view>
+      <view class="paid"><text>实收</text><text>¥{{order.totalPaid}}</text></view>
+      <view><text>支付方式</text><text>{{order.paymentMethod}}</text></view>
+    </view>
+
+    <view class="section-title">收衣门店</view>
+    <view class="store">
+      <view class="store-name">{{order.storeName}}</view>
+      <view class="subtitle">{{order.storeAddress}}</view>
+      <button wx:if="{{order.storePhone}}" class="secondary call" bindtap="callStore">拨打 {{order.storePhone}}</button>
+    </view>
+  </block>
+</view>
