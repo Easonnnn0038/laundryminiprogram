@@ -1,29 +1,32 @@
 const app = getApp()
-const { date } = require('../../utils/format')
+
+const categories = [
+  { key: 'CLOTHES', name: '衣物', position: 'p00' },
+  { key: 'SHOES', name: '鞋类', position: 'p10' },
+  { key: 'HOME', name: '家纺卧室', position: 'p20' },
+  { key: 'IRON', name: '单烫', position: 'p01' },
+  { key: 'LEATHER', name: '皮衣护理', position: 'p11' },
+  { key: 'BAG', name: '包包', position: 'p21' }
+]
 
 Page({
-  data: { loading: true, bound: false, orders: [], error: '' },
+  data: { loading: true, bound: false, error: '', categories },
   onShow() { this.load() },
-  onPullDownRefresh() { this.load().finally(wx.stopPullDownRefresh) },
   async load() {
     this.setData({ loading: true, error: '' })
-    try {
-      await app.ensureReady()
-      const bound = app.globalData.bound
-      const orders = bound ? await app.request('/orders') : []
-      this.setData({ bound, orders: orders.map(item => ({ ...item, receiveTime: date(item.receiveTime) })) })
-    } catch (e) { this.setData({ error: e.message }) }
+    try { await app.ensureReady(); this.setData({ bound: app.globalData.bound }) }
+    catch (e) { this.setData({ error: e.message }) }
     finally { this.setData({ loading: false }) }
   },
   async bindPhone(e) {
-    if (!e.detail.code) return this.setData({ error: '需要绑定手机号才能查看本人订单，您可以稍后重试。' })
+    if (!e.detail.code) return this.setData({ error: '需要绑定手机号后才能预约上门取衣。' })
     this.setData({ loading: true, error: '' })
     try {
       const data = await app.request('/auth/bind-phone', { method: 'POST', data: { code: e.detail.code } })
-      app.saveAuth(data); await this.load()
-    } catch (err) { this.setData({ error: err.message, loading: false }) }
+      app.saveAuth(data); this.setData({ bound: true })
+    } catch (err) { this.setData({ error: err.message }) }
+    finally { this.setData({ loading: false }) }
   },
   retry() { app.globalData.ready = null; this.load() },
-  openOrder(e) { wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${e.currentTarget.dataset.id}` }) },
-  openOrders() { wx.switchTab({ url: '/pages/orders/orders' }) }
+  openCategory(e) { wx.navigateTo({ url: `/pages/pickup-order/pickup-order?group=${e.currentTarget.dataset.group}` }) }
 })

@@ -1,39 +1,35 @@
-<view class="page">
-  <view class="masthead">
-    <text class="brand">小木棒洗衣</text>
-    <view class="title">衣服到哪儿了，打开就知道。</view>
-    <view class="subtitle">进度、取衣码和门店联系方式，都在这里。</view>
-  </view>
-
+<view class="page home-page">
   <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="retry">重试</button></view>
-  <view wx:if="{{loading}}" class="loading">正在同步订单…</view>
-
-  <view wx:elif="{{!bound}}" class="surface bind-box">
-    <view class="bind-title">先确认是您本人</view>
-    <view class="subtitle">绑定微信验证的手机号后，才能安全查看与该号码关联的订单。</view>
+  <view wx:if="{{loading}}" class="loading">正在准备服务…</view>
+  <view wx:elif="{{!bound}}" class="bind-screen">
+    <image class="bind-hero" src="/assets/home-hero.jpg" mode="aspectFill" />
+    <view class="eyebrow">小木棒洗衣</view>
+    <view class="title">先绑定手机号，<br/>再开始预约</view>
+    <view class="subtitle">手机号用于保存联系人、地址和匹配您的洗衣订单。</view>
     <button class="primary bind-button" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>
+    <view class="privacy-note">仅用于本次服务与订单通知</view>
   </view>
-
-  <block wx:elif="{{orders.length}}">
-    <view class="section-title">正在进行</view>
-    <view wx:for="{{orders}}" wx:key="id" class="surface order" bindtap="openOrder" data-id="{{item.id}}" aria-role="button" aria-label="查看订单 {{item.orderNo}}，当前{{item.statusLabel}}">
-      <view class="order-top">
-        <view><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.urgent}}" class="tag">加急</text></view>
-        <text class="arrow">›</text>
+  <block wx:else>
+    <view class="hero">
+      <image src="/assets/home-hero.jpg" mode="aspectFill" />
+      <view class="hero-shade"></view>
+      <view class="hero-copy">
+        <view class="eyebrow">上门取送 · 专业洗护</view>
+        <view class="hero-title">洗衣这件事，<br/>简单一点。</view>
+        <view class="hero-subtitle">选好衣物，我们按时上门</view>
       </view>
-      <view wx:if="{{item.pickupCode}}" class="pickup">
-        <text class="pickup-label">取衣码</text>
-        <text class="pickup-code">{{item.pickupCode}}</text>
-      </view>
-      <view class="order-meta">{{item.totalCount}} 件衣物 · {{item.storeName}}</view>
-      <view class="order-no">{{item.orderNo}}</view>
-      <view class="time">{{item.receiveTime}}</view>
     </view>
-    <button class="secondary all-button" bindtap="openOrders">查看全部订单</button>
+    <view class="section-heading">
+      <view><view class="section-title">想洗什么？</view><view class="subtitle">选择分类开始下单</view></view>
+      <view class="step">01 / 03</view>
+    </view>
+    <view class="category-grid">
+      <view wx:for="{{categories}}" wx:key="key" class="category" data-group="{{item.key}}" bindtap="openCategory" aria-role="button" aria-label="选择{{item.name}}">
+        <view class="art-window"><image class="category-sheet {{item.position}}" src="/assets/category-sheet.jpg" mode="scaleToFill" /></view>
+        <view class="category-name">{{item.name}}</view>
+        <view class="category-link">去选择 <text>→</text></view>
+      </view>
+    </view>
+    <view class="service-note"><text class="note-mark">✓</text><view><strong>免费上门取送</strong><text>验衣后确认最终价格，过程更透明</text></view></view>
   </block>
-
-  <view wx:else class="surface empty">
-    <view class="empty-title">暂时没有进行中的订单</view>
-    <view>门店收衣后，订单会自动出现在这里。</view>
-  </view>
 </view>

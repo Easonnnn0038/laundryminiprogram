@@ -46,9 +46,14 @@ const catalog = [
   { id: 102, categoryGroup: 'CLOTHES', name: '长裤', originalPrice: 28, price: 24.64, unit: '条', remark: '', member: true, cardTypeName: '8.8折卡' },
   { id: 103, categoryGroup: 'CLOTHES', name: '羽绒服', originalPrice: 68, price: 59.84, unit: '件', remark: '起', member: true, cardTypeName: '8.8折卡' },
   { id: 104, categoryGroup: 'SHOES', name: '运动鞋', originalPrice: 45, price: 39.6, unit: '双', remark: '', member: true, cardTypeName: '8.8折卡' },
-  { id: 105, categoryGroup: 'HOME', name: '床单', originalPrice: 35, price: 30.8, unit: '件', remark: '', member: true, cardTypeName: '8.8折卡' }
+  { id: 105, categoryGroup: 'HOME', name: '床单', originalPrice: 35, price: 30.8, unit: '件', remark: '', member: true, cardTypeName: '8.8折卡' },
+  { id: 106, categoryGroup: 'IRON', name: '衬衫单烫', originalPrice: 18, price: 15.84, unit: '件', remark: '', member: true, cardTypeName: '8.8折卡' },
+  { id: 107, categoryGroup: 'LEATHER', name: '皮衣护理', originalPrice: 168, price: 147.84, unit: '件', remark: '起', member: true, cardTypeName: '8.8折卡' },
+  { id: 108, categoryGroup: 'BAG', name: '手提包护理', originalPrice: 128, price: 112.64, unit: '只', remark: '起', member: true, cardTypeName: '8.8折卡' }
 ]
 let pickupOrder
+let addresses = [{ id: 1, contactName: '演示顾客', detailAddress: '示范路 88 号 2 栋 101 室', isDefault: true }]
+let nextAddressId = 2
 
 function summary(order) {
   const { items, progress, totalAmount, discountAmount, urgentSurcharge, totalPaid, paymentMethod, ...value } = order
@@ -66,6 +71,22 @@ module.exports = {
     if (path === '/orders/9002') return { ...history }
     if (path === '/pickup-catalog') return catalog.map(item => ({ ...item }))
     if (path === '/pickup-defaults') return { contactName: '演示顾客', pickupAddress: '示范路 88 号 2 栋 101 室' }
+    if (path === '/addresses' && (!options.method || options.method === 'GET')) return addresses.map(item => ({ ...item }))
+    if (path === '/addresses' && options.method === 'POST') {
+      if (options.data.isDefault || !addresses.length) addresses = addresses.map(item => ({ ...item, isDefault: false }))
+      const value = { id: nextAddressId++, ...options.data, isDefault: Boolean(options.data.isDefault || !addresses.length) }
+      addresses.push(value); return { ...value }
+    }
+    const addressMatch = path.match(/^\/addresses\/(\d+)(\/default)?$/)
+    if (addressMatch) {
+      const id = Number(addressMatch[1])
+      if (addressMatch[2] && options.method === 'POST') { addresses = addresses.map(item => ({ ...item, isDefault: item.id === id })); return {} }
+      if (options.method === 'PUT') {
+        if (options.data.isDefault) addresses = addresses.map(item => ({ ...item, isDefault: false }))
+        addresses = addresses.map(item => item.id === id ? { ...item, ...options.data } : item); return addresses.find(item => item.id === id)
+      }
+      if (options.method === 'DELETE') { const removed = addresses.find(item => item.id === id); addresses = addresses.filter(item => item.id !== id); if (removed && removed.isDefault && addresses.length) addresses[0].isDefault = true; return {} }
+    }
     if (path === '/pickup-orders' && options.method === 'POST') {
       const items = options.data.items.map(selected => {
         const category = catalog.find(item => item.id === selected.categoryId)

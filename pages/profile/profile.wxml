@@ -1,6 +1,6 @@
 <view class="page">
   <view class="title">我的</view>
-  <view class="subtitle">管理用于查询订单的手机号与通知授权。</view>
+  <view class="subtitle">管理手机号、联系人和常用上门地址。</view>
   <view wx:if="{{error}}" class="error">{{error}}</view>
   <view wx:if="{{loading}}" class="empty">正在读取账户信息…</view>
   <block wx:else>
@@ -10,6 +10,7 @@
   </view>
   <button wx:if="{{!bound}}" class="primary bind" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>
   <view class="menu">
+    <view bindtap="openAddresses" aria-role="button" aria-label="管理联系人与地址"><text>联系人与地址</text><text class="hint">›</text></view>
     <view bindtap="showPrivacy" aria-role="button" aria-label="查看隐私说明"><text>隐私说明</text><text class="hint">›</text></view>
   </view>
   </block>

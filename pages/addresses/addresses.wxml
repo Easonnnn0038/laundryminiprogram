@@ -1,0 +1,23 @@
+<view class="page address-page">
+  <view class="title">联系人与地址</view>
+  <view class="subtitle">信息按当前绑定手机号保存，下单时直接确认即可。</view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{loading}}" class="empty">正在读取地址…</view>
+  <block wx:elif="{{editing}}">
+    <view class="surface form">
+      <view class="field"><text>联系人</text><input value="{{contactName}}" placeholder="请输入姓名" maxlength="50" data-field="contactName" bindinput="input" /></view>
+      <view class="field"><text>详细地址</text><textarea value="{{detailAddress}}" placeholder="小区、楼栋、单元和门牌号" maxlength="255" auto-height data-field="detailAddress" bindinput="input" /></view>
+      <view class="default-row"><text>设为默认地址</text><switch checked="{{isDefault}}" color="#173f35" bindchange="toggleDefault" /></view>
+    </view>
+    <view class="form-actions"><button class="secondary" bindtap="cancel">取消</button><button class="primary" loading="{{saving}}" disabled="{{saving}}" bindtap="save">保存</button></view>
+  </block>
+  <block wx:else>
+    <view wx:if="{{!addresses.length}}" class="surface empty">还没有保存联系人和地址</view>
+    <view wx:for="{{addresses}}" wx:key="id" class="address-row">
+      <view class="row-top"><view><strong>{{item.contactName}}</strong><text wx:if="{{item.isDefault}}">默认</text></view><button data-id="{{item.id}}" bindtap="edit">编辑</button></view>
+      <view class="detail">{{item.detailAddress}}</view>
+      <view class="row-actions"><button wx:if="{{!item.isDefault}}" data-id="{{item.id}}" bindtap="setDefault">设为默认</button><button class="danger" data-id="{{item.id}}" bindtap="remove">删除</button></view>
+    </view>
+    <button class="primary add-button" bindtap="add">新增联系人和地址</button>
+  </block>
+</view>

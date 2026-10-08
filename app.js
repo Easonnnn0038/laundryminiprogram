@@ -8,7 +8,7 @@ const localMockMode = touristMode && !serverTestMode
 const mock = localMockMode ? require('./mock') : null
 
 App({
-  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, mockMode: touristMode, serverTestMode },
+  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, pickupDraft: null, ordersTab: '', mockMode: touristMode, serverTestMode },
   onLaunch() { this.globalData.ready = this.login() },
   login() {
     if (localMockMode) {

@@ -13,6 +13,10 @@ Page({
     try { const data = await app.request('/auth/bind-phone', { method: 'POST', data: { code: e.detail.code } }); app.saveAuth(data); await this.load() }
     catch (err) { this.setData({ error: err.message, loading: false }) }
   },
+  openAddresses() {
+    if (!this.data.bound) return this.setData({ error: '请先绑定手机号' })
+    wx.navigateTo({ url: '/pages/addresses/addresses' })
+  },
   showPrivacy() { wx.showModal({ title: '隐私说明', content: '手机号只用于匹配本人洗衣订单和接收您主动授权的订单通知，不会在小程序中公开。', showCancel: false }) },
   showNotice() { wx.showToast({ title: '通知模板配置后开放', icon: 'none' }) }
 })

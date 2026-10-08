@@ -2,6 +2,8 @@
   "pages": [
     "pages/home/home",
     "pages/pickup-order/pickup-order",
+    "pages/appointment/appointment",
+    "pages/addresses/addresses",
     "pages/orders/orders",
     "pages/profile/profile",
     "pages/order-detail/order-detail"
@@ -20,7 +22,6 @@
     "borderStyle": "white",
     "list": [
       { "pagePath": "pages/home/home", "text": "首页" },
-      { "pagePath": "pages/pickup-order/pickup-order", "text": "下单" },
       { "pagePath": "pages/orders/orders", "text": "订单" },
       { "pagePath": "pages/profile/profile", "text": "我的" }
     ]

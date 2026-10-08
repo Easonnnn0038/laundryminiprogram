@@ -1,0 +1,33 @@
+<view class="page appointment-page">
+  <view class="heading"><view><view class="title">确认预约</view><view class="subtitle">确认上门信息后即可提交</view></view><view class="step">03 / 03</view></view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{loading}}" class="empty">正在读取联系人…</view>
+  <block wx:else>
+    <view class="section-title">联系人与地址</view>
+    <view wx:if="{{addresses.length}}" class="surface address-card">
+      <picker range="{{addresses}}" range-key="detailAddress" value="{{addressIndex}}" bindchange="selectAddress">
+        <view class="address-main"><view><strong>{{addresses[addressIndex].contactName}}</strong><text wx:if="{{addresses[addressIndex].isDefault}}">默认</text></view><view class="address-detail">{{addresses[addressIndex].detailAddress}}</view></view>
+      </picker>
+      <button class="text-button" bindtap="manageAddresses">管理地址</button>
+    </view>
+    <button wx:else class="secondary add-address" bindtap="manageAddresses">＋ 新增联系人和地址</button>
+
+    <view class="section-title">上门时间</view>
+    <view class="surface fields">
+      <picker mode="date" value="{{appointmentDate}}" start="{{appointmentDate}}" bindchange="selectDate"><view class="field"><text>预约日期</text><strong>{{appointmentDate}}　›</strong></view></picker>
+      <picker range="{{slots}}" value="{{slotIndex}}" bindchange="selectSlot"><view class="field"><text>时间段</text><strong>{{slots[slotIndex]}}　›</strong></view></picker>
+    </view>
+
+    <view class="section-title">衣物清单</view>
+    <view class="summary-list">
+      <view wx:for="{{selected}}" wx:key="id"><text>{{item.name}} × {{item.quantity}}</text><strong>¥{{item.price}}</strong></view>
+      <button class="text-button edit-items" bindtap="backToCatalog">返回修改</button>
+    </view>
+
+    <view class="section-title">备注 <text class="optional">选填</text></view>
+    <textarea class="remark" value="{{remark}}" placeholder="如门禁、取衣要求等" maxlength="500" bindinput="inputRemark" />
+    <view class="notice">提交的是预估清单，实际费用将在门店验衣后确认。</view>
+
+    <view class="submit-bar"><view><text>{{count}} 件</text><strong>预估 ¥{{total}}</strong></view><button class="primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">提交预约</button></view>
+  </block>
+</view>
