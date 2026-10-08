@@ -2,6 +2,23 @@
 .avatar { display: flex; align-items: center; justify-content: center; width: 96rpx; height: 96rpx; margin-right: 24rpx; border-radius: 24rpx; background: #173f35; color: #fff; font-size: 42rpx; font-weight: 800; }
 .identity-title { font-size: 34rpx; font-weight: 760; }
 .bind { margin: 10rpx 0 38rpx; }
+.member-card { margin-top: 24rpx; padding: 34rpx; border-radius: 26rpx; background: #173f35; color: #fffefa; }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; }
+.card-type, .card-no { display: block; }
+.card-type { font-size: 31rpx; font-weight: 800; }
+.card-no { margin-top: 8rpx; color: #c9d7d1; font-family: ui-monospace, monospace; font-size: 22rpx; letter-spacing: 1rpx; }
+.card-status { padding: 5rpx 12rpx; border-radius: 8rpx; background: #f4cf66; color: #4e3a00; font-size: 20rpx; font-weight: 800; }
+.balance-label { margin-top: 40rpx; color: #c9d7d1; font-size: 23rpx; }
+.balance { margin-top: 2rpx; font-size: 62rpx; font-weight: 850; letter-spacing: -2rpx; }
+.balance text { margin-right: 6rpx; font-size: 30rpx; font-weight: 700; }
+.card-foot { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 36rpx; padding-top: 24rpx; border-top: 1rpx solid #486a60; }
+.card-foot view text, .card-foot view strong { display: block; }
+.card-foot view text { color: #c9d7d1; font-size: 21rpx; }
+.card-foot view strong { margin-top: 5rpx; font-size: 27rpx; }
+.card-foot button { width: 180rpx; height: 68rpx; margin: 0; border-radius: 14rpx; background: #f4cf66; color: #3f3205; font-size: 27rpx; line-height: 68rpx; }
+.no-card { margin-top: 24rpx; padding: 30rpx 4rpx; border-top: 1rpx solid #d7ddd8; border-bottom: 1rpx solid #d7ddd8; }
+.no-card strong, .no-card text { display: block; }
+.no-card text { margin-top: 8rpx; color: #65736d; font-size: 24rpx; line-height: 1.55; }
 .menu { margin-top: 36rpx; border-top: 1rpx solid #d7ddd8; }
 .menu > view { display: flex; justify-content: space-between; padding: 34rpx 4rpx; border-bottom: 1rpx solid #d7ddd8; font-weight: 650; }
 .hint { color: #738079; font-weight: 400; }

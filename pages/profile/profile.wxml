@@ -9,6 +9,15 @@
     <view><view class="identity-title">微信顾客</view><view class="subtitle">{{bound ? phone : '尚未绑定手机号'}}</view></view>
   </view>
   <button wx:if="{{!bound}}" class="primary bind" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>
+  <block wx:if="{{bound}}">
+    <view wx:if="{{memberCard && memberCard.active}}" class="member-card">
+      <view class="card-head"><view><text class="card-type">{{memberCard.cardTypeName}}</text><text class="card-no">{{memberCard.cardNo}}</text></view><text class="card-status">使用中</text></view>
+      <view class="balance-label">卡内余额</view>
+      <view class="balance"><text>¥</text>{{memberCard.balanceText}}</view>
+      <view class="card-foot"><view><text>累计消费</text><strong>¥{{memberCard.totalConsumeText}}</strong></view><button bindtap="recharge">充值</button></view>
+    </view>
+    <view wx:else class="no-card"><view><strong>暂无会员卡</strong><text>会员卡需在门店办理，绑定手机号后会自动显示。</text></view></view>
+  </block>
   <view class="menu">
     <view bindtap="openAddresses" aria-role="button" aria-label="管理联系人与地址"><text>联系人与地址</text><text class="hint">›</text></view>
     <view bindtap="showPrivacy" aria-role="button" aria-label="查看隐私说明"><text>隐私说明</text><text class="hint">›</text></view>

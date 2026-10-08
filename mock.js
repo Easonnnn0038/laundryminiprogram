@@ -64,6 +64,12 @@ module.exports = {
   login: () => ({ token: 'tourist-demo-token', bound: true, phone: '138****0000' }),
   request(path, options = {}) {
     if (path === '/profile') return { bound: true, phone: '138****0000' }
+    if (path === '/member-card') return {
+      active: true, id: 1, cardNo: 'MC20261008001', cardTypeName: '8.8折卡', discountRate: 8.8,
+      balance: 286.4, totalRecharge: 600, totalConsume: 313.6,
+      storeName: '小木棒洗衣示范门店', storePhone: '021-55556666',
+      rechargeOptions: [{ id: 1, name: '8.8折卡', amount: 300, discountRate: 8.8 }, { id: 2, name: '6.8折卡', amount: 500, discountRate: 6.8 }]
+    }
     if (path === '/auth/bind-phone') return this.login()
     if (path === '/orders') return [summary(current)]
     if (path === '/orders?history=true') return [summary(history)]
