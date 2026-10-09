@@ -1,17 +1,25 @@
 const app = getApp()
 Page({
-  data: { loading: true, bound: false, phone: '', memberCard: null, error: '' },
+  data: { loading: true, bound: false, phone: '', memberCard: null, memberError: '', error: '' },
   onShow() { this.load() },
   async load() {
+    this.setData({ loading: true, error: '', memberError: '' })
     try {
       await app.ensureReady()
       const data = await app.request('/profile')
-      const memberCard = data.bound ? await app.request('/member-card') : null
-      if (memberCard && memberCard.active) {
-        memberCard.balanceText = Number(memberCard.balance || 0).toFixed(2)
-        memberCard.totalConsumeText = Number(memberCard.totalConsume || 0).toFixed(2)
+      this.setData({ ...data, memberCard: null })
+      if (data.bound) {
+        try {
+          const memberCard = await app.request('/member-card')
+          if (memberCard.active) {
+            memberCard.balanceText = Number(memberCard.balance || 0).toFixed(2)
+            memberCard.totalConsumeText = Number(memberCard.totalConsume || 0).toFixed(2)
+          }
+          this.setData({ memberCard })
+        } catch (_) {
+          this.setData({ memberError: '会员卡信息暂时无法加载' })
+        }
       }
-      this.setData({ ...data, memberCard })
     }
     catch (e) { this.setData({ error: e.message }) }
     finally { this.setData({ loading: false }) }

@@ -2,6 +2,8 @@
 .avatar { display: flex; align-items: center; justify-content: center; width: 96rpx; height: 96rpx; margin-right: 24rpx; border-radius: 24rpx; background: #173f35; color: #fff; font-size: 42rpx; font-weight: 800; }
 .identity-title { font-size: 34rpx; font-weight: 760; }
 .bind { margin: 10rpx 0 38rpx; }
+.member-error { display: flex; align-items: center; justify-content: space-between; margin-top: 24rpx; padding: 26rpx 4rpx; border-top: 1rpx solid #d7ddd8; border-bottom: 1rpx solid #d7ddd8; color: #813b25; }
+.member-error button { width: auto; height: auto; margin: 0; padding: 0; background: transparent; color: #173f35; font-size: 25rpx; line-height: 1.5; text-decoration: underline; }
 .member-card { margin-top: 24rpx; padding: 34rpx; border-radius: 26rpx; background: #173f35; color: #fffefa; }
 .card-head { display: flex; align-items: flex-start; justify-content: space-between; }
 .card-type, .card-no { display: block; }
