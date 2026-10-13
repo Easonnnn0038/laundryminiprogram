@@ -1,13 +1,14 @@
-page { background: #f7f4ec; color: #18332c; font-family: system-ui, sans-serif; font-size: 30rpx; }
+page { background: #f5f8ff; color: #172b4d; font-family: system-ui, sans-serif; font-size: 30rpx; }
 button { border-radius: 16rpx; font-weight: 650; }
 button::after { border: 0; }
 .page { min-height: 100vh; padding: 40rpx 32rpx 80rpx; box-sizing: border-box; }
 .title { margin: 0 0 12rpx; font-size: 52rpx; line-height: 1.16; font-weight: 800; letter-spacing: -1rpx; }
-.subtitle { color: #65736d; line-height: 1.6; }
+.subtitle { color: #5e6f89; line-height: 1.6; }
 .section-title { margin: 48rpx 0 20rpx; font-size: 34rpx; font-weight: 760; }
-.surface { background: #fffefa; border-radius: 24rpx; box-shadow: 0 12rpx 32rpx rgba(29, 59, 50, .08); }
-.primary { background: #173f35; color: #fff; }
-.secondary { background: #e6eee8; color: #173f35; }
-.empty { padding: 72rpx 36rpx; text-align: center; color: #65736d; }
+.surface { background: #fff; border-radius: 24rpx; box-shadow: 0 12rpx 32rpx rgba(21, 94, 239, .08); }
+.primary { background: #155eef; color: #fff; }
+.secondary { background: #e8f1ff; color: #154ea8; }
+.empty { padding: 72rpx 36rpx; text-align: center; color: #5e6f89; }
 .error { margin: 24rpx 0; padding: 24rpx; border-radius: 16rpx; background: #f9e9e1; color: #813b25; }
-.tag { display: inline-block; margin-left: 12rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #f4cf66; color: #4e3a00; font-size: 22rpx; font-weight: 700; }
+.tag { display: inline-block; margin-left: 12rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #dceaff; color: #164e9c; font-size: 22rpx; font-weight: 700; }
+.error .retry { display: inline-block; width: auto; height: auto; margin: 0 0 0 14rpx; padding: 0 8rpx; background: transparent; color: #813b25; font-size: 26rpx; line-height: 1.5; text-decoration: underline; vertical-align: baseline; }

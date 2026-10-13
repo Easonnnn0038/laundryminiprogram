@@ -51,6 +51,7 @@ const catalog = [
   { id: 107, categoryGroup: 'LEATHER', name: '皮衣护理', originalPrice: 168, price: 147.84, unit: '件', remark: '起', member: true, cardTypeName: '8.8折卡' },
   { id: 108, categoryGroup: 'BAG', name: '手提包护理', originalPrice: 128, price: 112.64, unit: '只', remark: '起', member: true, cardTypeName: '8.8折卡' }
 ]
+const deals = require('./data/deals').deals.map(item => ({ ...item, description:item.scope,categoryGroups:[item.group],platform:'DOUYIN',requiredQuantity:Number((item.name.match(/(\d+)\s*[件双]/)||[])[1]||1) }))
 let pickupOrder
 let addresses = [{ id: 1, contactName: '演示顾客', detailAddress: '示范路 88 号 2 栋 101 室', isDefault: true }]
 let nextAddressId = 2
@@ -76,6 +77,7 @@ module.exports = {
     if (path === '/orders/9001') return { ...current }
     if (path === '/orders/9002') return { ...history }
     if (path === '/pickup-catalog') return catalog.map(item => ({ ...item }))
+    if (path === '/deals') return deals.map(item => ({ ...item }))
     if (path === '/pickup-defaults') return { contactName: '演示顾客', pickupAddress: '示范路 88 号 2 栋 101 室' }
     if (path === '/addresses' && (!options.method || options.method === 'GET')) return addresses.map(item => ({ ...item }))
     if (path === '/addresses' && options.method === 'POST') {

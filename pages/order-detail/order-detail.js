@@ -4,6 +4,7 @@ Page({
   data: { loading: true, order: null, error: '' },
   onLoad(options) { this.id = options.id; this.load() },
   async load() {
+    this.setData({ loading: true, error: '' })
     try {
       await app.ensureReady(); const order = await app.request(`/orders/${this.id}`)
       order.receiveTime = date(order.receiveTime)

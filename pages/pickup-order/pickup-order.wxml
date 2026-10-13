@@ -1,8 +1,9 @@
 <view class="page catalog-page">
   <view class="heading"><view><view class="title">选择衣物</view><view class="subtitle">可跨分类添加，数量稍后仍可调整</view></view><view class="step">02 / 03</view></view>
-  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
   <view wx:if="{{loading}}" class="empty">正在读取价目…</view>
   <block wx:else>
+    <view wx:if="{{deal}}" class="deal-banner"><view><text>团购套餐</text><strong>{{deal.name}}</strong></view><view class="deal-banner-price">¥{{deal.price}}</view><view class="deal-banner-note">请按套餐内容选择衣物；门店将核对适用范围和核销方式。</view></view>
     <scroll-view class="group-tabs" scroll-x enhanced show-scrollbar="{{false}}">
       <view class="group-tabs-inner"><button wx:for="{{groups}}" wx:key="key" class="group-tab {{activeGroup === item.key ? 'active' : ''}}" data-group="{{item.key}}" bindtap="selectGroup">{{item.label}}</button></view>
     </scroll-view>

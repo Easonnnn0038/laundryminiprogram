@@ -1,6 +1,6 @@
 <view class="page">
   <view wx:if="{{loading}}" class="empty">正在加载订单…</view>
-  <view wx:elif="{{error}}" class="error">{{error}}</view>
+  <view wx:elif="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
   <block wx:elif="{{order}}">
     <view class="hero">
       <view class="status">{{order.statusLabel}}<text wx:if="{{order.urgent}}" class="tag">加急</text></view>

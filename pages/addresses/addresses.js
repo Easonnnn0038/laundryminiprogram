@@ -2,7 +2,15 @@ const app = getApp()
 
 Page({
   data: { loading: true, saving: false, error: '', addresses: [], editing: false, editId: null, contactName: '', detailAddress: '', isDefault: false },
-  onLoad() { this.load() },
+  onLoad() {
+    const draft = wx.getStorageSync('addressDraft') || {}
+    if (draft.editing) this.setData(draft)
+    this.load()
+  },
+  onHide() { this.saveDraft() },
+  saveDraft() {
+    if (this.data.editing) wx.setStorageSync('addressDraft', { editing: true, editId: this.data.editId, contactName: this.data.contactName, detailAddress: this.data.detailAddress, isDefault: this.data.isDefault })
+  },
   async load() {
     this.setData({ loading: true, error: '' })
     try { this.setData({ addresses: (await app.request('/addresses')).map(item => ({ ...item, isDefault: Boolean(item.isDefault) })) }) }
@@ -14,9 +22,9 @@ Page({
     const item = this.data.addresses.find(address => address.id === Number(e.currentTarget.dataset.id))
     this.setData({ editing: true, editId: item.id, contactName: item.contactName, detailAddress: item.detailAddress, isDefault: item.isDefault })
   },
-  input(e) { this.setData({ [e.currentTarget.dataset.field]: e.detail.value }) },
-  toggleDefault(e) { this.setData({ isDefault: e.detail.value }) },
-  cancel() { this.setData({ editing: false, error: '' }) },
+  input(e) { this.setData({ [e.currentTarget.dataset.field]: e.detail.value }); this.saveDraft() },
+  toggleDefault(e) { this.setData({ isDefault: e.detail.value }); this.saveDraft() },
+  cancel() { this.setData({ editing: false, error: '' }); wx.removeStorageSync('addressDraft') },
   async save() {
     if (!this.data.contactName.trim()) return this.setData({ error: '请填写联系人姓名' })
     if (!this.data.detailAddress.trim()) return this.setData({ error: '请填写完整上门地址' })
@@ -24,7 +32,7 @@ Page({
     try {
       const path = this.data.editId ? `/addresses/${this.data.editId}` : '/addresses'
       await app.request(path, { method: this.data.editId ? 'PUT' : 'POST', data: { contactName: this.data.contactName.trim(), detailAddress: this.data.detailAddress.trim(), isDefault: this.data.isDefault } })
-      this.setData({ editing: false }); await this.load()
+      this.setData({ editing: false }); wx.removeStorageSync('addressDraft'); await this.load()
     } catch (e) { this.setData({ error: e.message }) }
     finally { this.setData({ saving: false }) }
   },

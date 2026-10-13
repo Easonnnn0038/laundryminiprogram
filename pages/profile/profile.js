@@ -51,6 +51,7 @@ Page({
     })
     if (result.confirm && phone) wx.makePhoneCall({ phoneNumber: phone })
   },
-  showPrivacy() { wx.showModal({ title: '隐私说明', content: '手机号只用于匹配本人洗衣订单和接收您主动授权的订单通知，不会在小程序中公开。', showCancel: false }) },
+  showPrivacy() { wx.navigateTo({ url: '/pages/privacy/privacy' }) },
+  showDeletion() { wx.showModal({ title: '申请删除个人资料', content: '当前尚不支持在线自动删除。请携带绑定手机号到办理业务的门店提出申请，由门店核验后处理。您也可以先在隐私说明页清除本机草稿。', showCancel: false }) },
   showNotice() { wx.showToast({ title: '通知模板配置后开放', icon: 'none' }) }
 })

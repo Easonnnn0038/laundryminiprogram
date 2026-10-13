@@ -1,0 +1,17 @@
+<view class="page deals-page">
+  <view class="title">团购套餐</view>
+  <view class="subtitle">选择套餐后预约上门，门店将核对衣物材质与适用范围。</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
+  <view wx:if="{{loading}}" class="empty">正在读取套餐…</view>
+  <view class="deal-list">
+    <view wx:for="{{deals}}" wx:key="code" class="deal-row">
+      <view class="deal-art"><image class="deal-sheet {{item.position}}" src="/assets/deal-sheet.jpg" mode="scaleToFill" lazy-load="{{true}}" /></view>
+      <view class="deal-main">
+        <strong>{{item.name}}</strong>
+        <text>{{item.scope}}</text>
+        <view class="deal-bottom"><view class="price"><text>¥</text>{{item.price}} <del>¥{{item.originalPrice}}</del></view><button class="primary" data-group="{{item.group}}" data-code="{{item.code}}" bindtap="useDeal">预约使用</button></view>
+      </view>
+    </view>
+  </view>
+  <view class="rules">团购套餐不在小程序内收款。最终可用范围、核销方式及费用以门店确认结果为准。</view>
+</view>

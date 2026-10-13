@@ -8,8 +8,11 @@ const localMockMode = touristMode && !serverTestMode
 const mock = localMockMode ? require('./mock') : null
 
 App({
-  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, pickupDraft: null, ordersTab: '', mockMode: touristMode, serverTestMode },
-  onLaunch() { this.globalData.ready = this.login() },
+  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, pickupDraft: wx.getStorageSync('pickupDraft') || null, ordersTab: '', mockMode: touristMode, serverTestMode, offline: false, reauth: null },
+  onLaunch() {
+    if (wx.onNetworkStatusChange) wx.onNetworkStatusChange(({ isConnected }) => { this.globalData.offline = !isConnected })
+    this.globalData.ready = this.login()
+  },
   login() {
     if (localMockMode) {
       const data = mock.login()
@@ -27,25 +30,52 @@ App({
     })
   },
   saveAuth(data) {
+    const owner = wx.getStorageSync('draftOwner') || ''
+    if (owner && owner !== (data.phone || '')) {
+      for (const key of ['pickupDraft', 'appointmentDraft', 'addressDraft']) wx.removeStorageSync(key)
+      this.globalData.pickupDraft = null
+    }
+    wx.setStorageSync('draftOwner', data.phone || '')
     this.globalData.token = data.token
     this.globalData.bound = data.bound
     wx.setStorageSync('token', data.token)
   },
   request(path, options = {}) {
     if (localMockMode) return Promise.resolve().then(() => mock.request(path, options))
-    return new Promise((resolve, reject) => {
+    const method = options.method || 'GET'
+    const send = attempt => new Promise((resolve, reject) => {
       wx.request({
         url: apiBaseUrl + path,
-        method: options.method || 'GET',
+        method,
+        timeout: 15000,
         data: options.data,
         header: { ...(options.header || {}), ...(options.auth === false ? {} : { Authorization: `Bearer ${this.globalData.token}` }) },
         success: ({ statusCode, data }) => {
-          if (statusCode >= 200 && statusCode < 300 && data.code === 200) resolve(data.data)
-          else reject(new Error(data && data.message ? data.message : '请求失败，请稍后重试'))
+          this.globalData.offline = false
+          if (statusCode >= 200 && statusCode < 300 && data && data.code === 200) return resolve(data.data)
+          if (statusCode === 401 && options.auth !== false && !options._reauthed) {
+            this.globalData.token = ''; this.globalData.bound = false; wx.setStorageSync('token', '')
+            if (!this.globalData.reauth) {
+              this.globalData.ready = this.login()
+              this.globalData.reauth = this.globalData.ready.finally(() => { this.globalData.reauth = null })
+            }
+            return this.globalData.reauth.then(() => method === 'GET'
+              ? this.request(path, { ...options, _reauthed: true }).then(resolve, reject)
+              : reject(new Error('登录已恢复，请再次点击刚才的操作')),
+            () => reject(new Error('登录已失效，请检查网络后重试')))
+          }
+          if (method === 'GET' && attempt === 0 && [502, 503, 504].includes(statusCode)) return send(1).then(resolve, reject)
+          reject(new Error(data && data.message ? data.message : '请求失败，请稍后重试'))
         },
-        fail: () => reject(new Error('网络连接失败，请检查后重试'))
+        fail: () => {
+          if (method === 'GET' && attempt === 0) return send(1).then(resolve, reject)
+          this.globalData.offline = true
+          if (wx.showToast) wx.showToast({ title: '网络不可用，请检查后重试', icon: 'none' })
+          reject(new Error('网络连接失败，请检查后重试'))
+        }
       })
     })
+    return send(0)
   },
   ensureReady() {
     if (!this.globalData.ready) this.globalData.ready = this.login()

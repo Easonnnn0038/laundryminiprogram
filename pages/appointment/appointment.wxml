@@ -1,6 +1,6 @@
 <view class="page appointment-page">
   <view class="heading"><view><view class="title">确认预约</view><view class="subtitle">确认上门信息后即可提交</view></view><view class="step">03 / 03</view></view>
-  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试读取</button></view>
   <view wx:if="{{loading}}" class="empty">正在读取联系人…</view>
   <block wx:else>
     <view class="section-title">联系人与地址</view>
@@ -19,15 +19,17 @@
     </view>
 
     <view class="section-title">衣物清单</view>
+    <view wx:if="{{deal}}" class="deal-summary"><view><text>使用团购套餐</text><strong>{{deal.name}}</strong></view><view>参考价 <strong>¥{{deal.price}}</strong></view></view>
+    <view wx:if="{{deal}}" class="surface fields"><view class="field"><text>团购券码</text><input value="{{voucherCode}}" placeholder="请输入券码" maxlength="80" bindinput="inputVoucher" /></view></view>
     <view class="summary-list">
       <view wx:for="{{selected}}" wx:key="id"><text>{{item.name}} × {{item.quantity}}</text><strong>¥{{item.price}}</strong></view>
       <button class="text-button edit-items" bindtap="backToCatalog">返回修改</button>
     </view>
 
     <view class="section-title">备注 <text class="optional">选填</text></view>
-    <textarea class="remark" value="{{remark}}" placeholder="如门禁、取衣要求等" maxlength="500" bindinput="inputRemark" />
-    <view class="notice">提交的是预估清单，实际费用将在门店验衣后确认。</view>
+    <textarea class="remark" value="{{remark}}" placeholder="如门禁、取衣要求等" maxlength="400" bindinput="inputRemark" />
+    <view class="notice">{{deal ? '门店将核对团购套餐适用范围和核销方式，确认后按约定上门。' : '提交的是预估清单，实际费用将在门店验衣后确认。'}}</view>
 
-    <view class="submit-bar"><view><text>{{count}} 件</text><strong>预估 ¥{{total}}</strong></view><button class="primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">提交预约</button></view>
+    <view class="submit-bar"><view><text>{{count}} 件</text><strong>{{deal ? '团购参考 ¥' + deal.price : '预估 ¥' + total}}</strong></view><button class="primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">提交预约</button></view>
   </block>
 </view>

@@ -1,4 +1,5 @@
 const app = getApp()
+const { loadDeals } = require('../../utils/deals')
 
 const categories = [
   { key: 'CLOTHES', name: '衣物', position: 'p00' },
@@ -10,11 +11,11 @@ const categories = [
 ]
 
 Page({
-  data: { loading: true, bound: false, error: '', categories },
+  data: { loading: true, bound: false, error: '', categories, featuredDeals: [] },
   onShow() { this.load() },
   async load() {
     this.setData({ loading: true, error: '' })
-    try { await app.ensureReady(); this.setData({ bound: app.globalData.bound }) }
+    try { await app.ensureReady(); const deals=await loadDeals(app);this.setData({ bound: app.globalData.bound,featuredDeals:deals.filter(item=>item.featured) }) }
     catch (e) { this.setData({ error: e.message }) }
     finally { this.setData({ loading: false }) }
   },
@@ -28,5 +29,7 @@ Page({
     finally { this.setData({ loading: false }) }
   },
   retry() { app.globalData.ready = null; this.load() },
+  openDeals() { wx.navigateTo({ url: '/pages/deals/deals' }) },
+  openDeal(e) { wx.navigateTo({ url: `/pages/pickup-order/pickup-order?group=${e.currentTarget.dataset.group}&deal=${e.currentTarget.dataset.code}` }) },
   openCategory(e) { wx.navigateTo({ url: `/pages/pickup-order/pickup-order?group=${e.currentTarget.dataset.group}` }) }
 })

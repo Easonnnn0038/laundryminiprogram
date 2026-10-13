@@ -19,6 +19,19 @@
         <view class="hero-subtitle">选好衣物，我们按时上门</view>
       </view>
     </view>
+    <view class="deal-heading">
+      <view><view class="section-title">精选团购</view><view class="subtitle">实惠套餐，预约后由门店核对</view></view>
+      <button class="deal-all" bindtap="openDeals">全部套餐　›</button>
+    </view>
+    <scroll-view class="deal-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="deal-track">
+        <view wx:for="{{featuredDeals}}" wx:key="code" class="deal-card" data-group="{{item.group}}" data-code="{{item.code}}" bindtap="openDeal" aria-role="button" aria-label="预约使用{{item.name}}">
+          <view class="deal-art"><image class="deal-sheet {{item.position}}" src="/assets/deal-sheet.jpg" mode="scaleToFill" lazy-load="{{true}}" /></view>
+          <view class="deal-copy"><strong>{{item.name}}</strong><text>{{item.scope}}</text><view class="deal-price"><text>¥</text>{{item.price}} <del>¥{{item.originalPrice}}</del></view><view class="deal-action">预约使用　›</view></view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="deal-note">套餐价格与适用范围由门店按团购规则核对</view>
     <view class="section-heading">
       <view><view class="section-title">想洗什么？</view><view class="subtitle">选择分类开始下单</view></view>
       <view class="step">01 / 03</view>
