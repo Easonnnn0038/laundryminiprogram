@@ -3,6 +3,7 @@
   <view class="subtitle">管理手机号、联系人和常用上门地址。</view>
   <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
   <view wx:if="{{loading}}" class="empty">正在读取账户信息…</view>
+  <view wx:elif="{{closed}}" class="empty">账户已注销。需要再次使用服务时，可重新开通。<button class="primary reopen" bindtap="reopenAccount">重新开通</button></view>
   <block wx:else>
   <view class="identity">
     <view class="avatar">木</view>
@@ -22,7 +23,7 @@
   <view class="menu">
     <view bindtap="openAddresses" aria-role="button" aria-label="管理联系人与地址"><text>联系人与地址</text><text class="hint">›</text></view>
     <view bindtap="showPrivacy" aria-role="button" aria-label="查看隐私说明"><text>隐私说明</text><text class="hint">›</text></view>
-    <view bindtap="showDeletion" aria-role="button" aria-label="了解如何申请删除个人资料"><text>申请删除个人资料</text><text class="hint">›</text></view>
+    <view bindtap="showDeletion" aria-role="button" aria-label="申请删除个人资料或注销账户"><text>个人资料与注销</text><text class="hint">›</text></view>
   </view>
   </block>
   <view class="foot">小木棒洗衣 · 顾客服务</view>

@@ -6,6 +6,12 @@
   <view class="section-title">本机草稿</view>
   <view class="privacy-copy">未提交的选衣、地址填写和预约内容会保存在当前设备，方便中途返回继续填写。清除草稿不会删除已经提交到门店的订单和地址。</view>
   <button class="secondary clear-button" bindtap="clearDrafts">清除本机草稿</button>
-  <view class="section-title">申请删除</view>
-  <view class="privacy-copy">当前尚未开放在线自动删除。请携带绑定手机号到办理业务的门店提出个人资料删除申请，由门店核验身份后处理。已经完成的业务记录是否需要保留，由正式隐私政策及适用规定说明。</view>
+  <view class="section-title">申请删除个人资料</view>
+  <view class="privacy-copy">可在线登记申请。门店核验后会处理不再需要的资料；未完成服务所需的信息暂时保留。必要的交易资料可能依法保留，到期后再删除。登记申请不代表资料已全部删除。</view>
+  <button wx:if="{{!mockMode && !accountClosed}}" class="secondary action-button" disabled="{{busy}}" bindtap="requestDeletion">提交删除申请</button>
+  <view class="section-title">注销小程序账户</view>
+  <view class="privacy-copy">如没有未完成的关联预约或洗护订单，可注销账户并清除账户绑定；仅由您使用的常用地址会删除。门店仍需核验保留中的交易资料。</view>
+  <button wx:if="{{!mockMode && !accountClosed}}" class="close-button action-button" disabled="{{busy}}" bindtap="closeAccount">注销账户</button>
+  <view wx:if="{{mockMode}}" class="privacy-copy notice">演示模式不提交真实申请或注销账户。</view>
+  <view wx:if="{{accountClosed}}" class="privacy-copy notice">账户已注销。如需重新使用，可在“我的”页面重新开通。</view>
 </view>

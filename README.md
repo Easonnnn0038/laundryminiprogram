@@ -54,13 +54,14 @@ module.exports = {
 3. 配置已备案的 HTTPS 域名，并在微信公众平台添加合法 request 域名；`http://` 公网地址不能用于正式小程序。
 4. 确认后端已执行上门预约和订单来源相关 Flyway 迁移，并关闭测试登录。
 5. 在真机完成微信登录、手机号授权、本人订单隔离、预约创建及门店导入正式收衣的回归测试。
-6. 由客户确认运营主体、隐私政策、资料保留与删除办理方式。当前“个人信息说明”是功能说明，删除入口提供门店申请指引；后端自助解绑/注销/删除仍属于后续任务。`project.config.json` 已关闭上传 Source Map，发布前还应检查微信开发者工具最终上传设置。
+6. 由客户确认运营主体、正式隐私政策、交易资料的具体保留依据与期限、门店核验及申请处理方式。当前“个人信息说明”是功能说明：可在线登记删除申请；没有未完成关联订单时可注销小程序账户，交易资料仍待门店核验处理，不等于已全部删除。`project.config.json` 已关闭上传 Source Map，发布前还应检查微信开发者工具最终上传设置。
 
 ## 后端依赖
 
 小程序 API 由 `C:\Users\33531\IdeaProjects\laundry-backend` 提供，基础路径为 `/api/miniapp`。主要接口包括：
 
 - `POST /auth/login`、`POST /auth/bind-phone`
+- `POST /account/unbind-phone`、`POST /account/deletion-request`、`DELETE /account`
 - `GET /profile`、`GET /orders`、`GET /orders/{id}`
 - `GET /pickup-catalog`、`GET /pickup-defaults`
 - `GET /pickup-orders`、`POST /pickup-orders`、`GET /pickup-orders/{id}`

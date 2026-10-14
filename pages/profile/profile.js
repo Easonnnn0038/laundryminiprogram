@@ -1,9 +1,10 @@
 const app = getApp()
 Page({
-  data: { loading: true, bound: false, phone: '', memberCard: null, memberError: '', error: '' },
+  data: { loading: true, closed: false, bound: false, phone: '', memberCard: null, memberError: '', error: '' },
   onShow() { this.load() },
   async load() {
-    this.setData({ loading: true, error: '', memberError: '' })
+    if (app.globalData.accountClosed) return this.setData({ loading: false, closed: true, error: '' })
+    this.setData({ loading: true, closed: false, error: '', memberError: '' })
     try {
       await app.ensureReady()
       const data = await app.request('/profile')
@@ -23,6 +24,11 @@ Page({
     }
     catch (e) { this.setData({ error: e.message }) }
     finally { this.setData({ loading: false }) }
+  },
+  async reopenAccount() {
+    this.setData({ loading: true, error: '' })
+    try { await app.reopenAccount(); await this.load() }
+    catch (e) { this.setData({ loading: false, error: e.message }) }
   },
   async bindPhone(e) {
     if (!e.detail.code) return this.setData({ error: '需要绑定手机号才能查看本人订单，您可以稍后重试。' })
@@ -52,6 +58,6 @@ Page({
     if (result.confirm && phone) wx.makePhoneCall({ phoneNumber: phone })
   },
   showPrivacy() { wx.navigateTo({ url: '/pages/privacy/privacy' }) },
-  showDeletion() { wx.showModal({ title: '申请删除个人资料', content: '当前尚不支持在线自动删除。请携带绑定手机号到办理业务的门店提出申请，由门店核验后处理。您也可以先在隐私说明页清除本机草稿。', showCancel: false }) },
+  showDeletion() { this.showPrivacy() },
   showNotice() { wx.showToast({ title: '通知模板配置后开放', icon: 'none' }) }
 })

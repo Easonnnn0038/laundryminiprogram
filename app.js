@@ -8,10 +8,10 @@ const localMockMode = touristMode && !serverTestMode
 const mock = localMockMode ? require('./mock') : null
 
 App({
-  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, pickupDraft: wx.getStorageSync('pickupDraft') || null, ordersTab: '', mockMode: touristMode, serverTestMode, offline: false, reauth: null },
+  globalData: { token: wx.getStorageSync('token') || '', bound: false, ready: null, pickupDraft: wx.getStorageSync('pickupDraft') || null, ordersTab: '', mockMode: touristMode, serverTestMode, offline: false, reauth: null, accountClosed: Boolean(wx.getStorageSync('accountClosed')) },
   onLaunch() {
     if (wx.onNetworkStatusChange) wx.onNetworkStatusChange(({ isConnected }) => { this.globalData.offline = !isConnected })
-    this.globalData.ready = this.login()
+    if (!this.globalData.accountClosed) this.globalData.ready = this.login()
   },
   login() {
     if (localMockMode) {
@@ -40,7 +40,23 @@ App({
     this.globalData.bound = data.bound
     wx.setStorageSync('token', data.token)
   },
+  closeLocalAccount() {
+    this.globalData.accountClosed = true
+    this.globalData.token = ''
+    this.globalData.bound = false
+    this.globalData.ready = null
+    this.globalData.pickupDraft = null
+    for (const key of ['token', 'draftOwner', 'pickupDraft', 'appointmentDraft', 'addressDraft']) wx.removeStorageSync(key)
+    wx.setStorageSync('accountClosed', true)
+  },
+  reopenAccount() {
+    this.globalData.accountClosed = false
+    wx.removeStorageSync('accountClosed')
+    this.globalData.ready = this.login()
+    return this.globalData.ready
+  },
   request(path, options = {}) {
+    if (this.globalData.accountClosed) return Promise.reject(new Error('账户已注销，请在“我的”页面重新开通'))
     if (localMockMode) return Promise.resolve().then(() => mock.request(path, options))
     const method = options.method || 'GET'
     const send = attempt => new Promise((resolve, reject) => {
@@ -78,6 +94,7 @@ App({
     return send(0)
   },
   ensureReady() {
+    if (this.globalData.accountClosed) return Promise.reject(new Error('账户已注销，请在“我的”页面重新开通'))
     if (!this.globalData.ready) this.globalData.ready = this.login()
     return this.globalData.ready.catch(error => { this.globalData.ready = null; throw error })
   }

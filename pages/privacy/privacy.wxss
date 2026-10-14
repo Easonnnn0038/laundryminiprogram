@@ -1,1 +1,2 @@
 .privacy-page{padding-bottom:110rpx}.privacy-copy{color:#334864;line-height:1.75;overflow-wrap:anywhere}.clear-button{margin:28rpx 0 0;min-height:84rpx;line-height:84rpx}.section-title{margin-top:50rpx}
+.action-button{margin:28rpx 0 0;min-height:84rpx;line-height:84rpx}.close-button{background:#fff;color:#9b2c2c;border:1rpx solid #d9e4f2}.notice{margin-top:28rpx}

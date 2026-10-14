@@ -25,3 +25,4 @@
 .menu > view { display: flex; justify-content: space-between; padding: 34rpx 4rpx; border-bottom: 1rpx solid #d9e4f2; font-weight: 650; }
 .hint { color: #66758c; font-weight: 400; }
 .foot { margin-top: 100rpx; text-align: center; color: #7b8aa0; font-size: 23rpx; }
+.reopen { margin-top: 28rpx; min-height: 84rpx; line-height: 84rpx; }

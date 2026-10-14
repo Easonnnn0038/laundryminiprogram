@@ -149,3 +149,43 @@ test('地址编辑草稿在重新打开后恢复', () => {
   assert.equal(restored.data.editing, true)
   assert.equal(restored.data.contactName, '张先生')
 })
+
+test('注销仅在服务端确认后清除本机账户', async () => {
+  storage.clear()
+  let closed = 0, calls = 0
+  const app = {
+    globalData: { mockMode: false, accountClosed: false, pickupDraft: null },
+    request: async () => ({ status: ++calls === 1 ? 'PENDING_SERVICE' : 'ACCOUNT_CLOSED', message: '处理结果' }),
+    closeLocalAccount: () => { closed++ }
+  }
+  const page = loadPage('pages/privacy/privacy.js', app, {
+    showModal: async () => ({ confirm: true }), switchTab() {}
+  })
+  await page.closeAccount()
+  assert.equal(closed, 0)
+  assert.equal(page.data.accountClosed, false)
+  await page.closeAccount()
+  assert.equal(closed, 1)
+  assert.equal(page.data.accountClosed, true)
+})
+
+test('已注销账户不会在小程序启动时自动重建', async () => {
+  let definition, logins = 0
+  global.App = value => { definition = value }
+  global.wx = {
+    getAccountInfoSync: () => ({ miniProgram: { appId: 'real-appid' } }),
+    getStorageSync: key => key === 'accountClosed',
+    removeStorageSync() {}, setStorageSync() {},
+    login: ({ success }) => { logins++; success({ code: 'new-code' }) },
+    request: ({ success }) => success({ statusCode: 200, data: { code: 200, data: { token: 'new-token', bound: false, phone: '' } } })
+  }
+  const filename = path.join(root, 'app.js')
+  delete require.cache[require.resolve(filename)]
+  require(filename)
+  const app = { ...definition, globalData: { ...definition.globalData } }
+  app.onLaunch()
+  assert.equal(logins, 0)
+  await assert.rejects(app.ensureReady(), /账户已注销/)
+  await app.reopenAccount()
+  assert.equal(logins, 1)
+})
