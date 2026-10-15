@@ -12,6 +12,15 @@
     </view>
     <button wx:else class="secondary add-address" bindtap="manageAddresses">＋ 新增联系人和地址</button>
 
+    <view class="section-title">寄回收件信息</view>
+    <view class="surface fields">
+      <view class="field"><text>收件人</text><input value="{{deliveryContactName}}" placeholder="请输入收件人姓名" maxlength="50" data-field="deliveryContactName" bindinput="inputDelivery" /></view>
+      <view class="field"><text>手机号</text><input value="{{deliveryPhone}}" type="number" placeholder="快递收件手机号" maxlength="11" data-field="deliveryPhone" bindinput="inputDelivery" /></view>
+      <picker mode="region" value="{{deliveryRegion}}" bindchange="selectDeliveryRegion"><view class="field"><text>省市区</text><strong>{{deliveryRegion.length ? deliveryRegion[0] + ' ' + deliveryRegion[1] + ' ' + deliveryRegion[2] : '请选择　›'}}</strong></view></picker>
+      <view class="field"><text>详细地址</text><input value="{{deliveryAddress}}" placeholder="街道、小区、楼栋和门牌号" maxlength="255" data-field="deliveryAddress" bindinput="inputDelivery" /></view>
+    </view>
+    <view class="notice">衣物洗好后统一寄到这里。请核对地址；运费将在验衣后随最终账单确认。</view>
+
     <view class="section-title">上门时间</view>
     <view class="surface fields">
       <picker mode="date" value="{{appointmentDate}}" start="{{appointmentDate}}" bindchange="selectDate"><view class="field"><text>预约日期</text><strong>{{appointmentDate}}　›</strong></view></picker>
@@ -28,7 +37,7 @@
 
     <view class="section-title">备注 <text class="optional">选填</text></view>
     <textarea class="remark" value="{{remark}}" placeholder="如门禁、取衣要求等" maxlength="400" bindinput="inputRemark" />
-    <view class="notice">{{deal ? '门店将核对团购套餐适用范围和核销方式，确认后按约定上门。' : '提交的是预估清单，实际费用将在门店验衣后确认。'}}</view>
+    <view class="notice">{{deal ? '门店将核对团购套餐适用范围和核销方式。' : '提交的是预估清单，洗护费与寄回运费以最终账单为准。'}}</view>
 
     <view class="submit-bar"><view><text>{{count}} 件</text><strong>{{deal ? '团购参考 ¥' + deal.price : '预估 ¥' + total}}</strong></view><button class="primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">提交预约</button></view>
   </block>

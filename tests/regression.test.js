@@ -5,6 +5,15 @@ const path = require('node:path')
 const root = path.resolve(__dirname, '..')
 const storage = new Map()
 
+test('演示订单与会员卡展示同一门店联系方式', () => {
+  const mock = require('../mock')
+  const order = mock.request('/orders/9001')
+  const card = mock.request('/member-card')
+  assert.equal(order.storeAddress, '安徽省宿州市埇桥区三八街道金方世纪城34幢120号')
+  assert.equal(order.storePhone, '18430880874')
+  assert.equal(card.storePhone, order.storePhone)
+})
+
 function loadPage(relative, app, wxOverrides = {}) {
   let definition
   global.getApp = () => app
@@ -49,9 +58,14 @@ test('套餐从选衣页完整传递到预约备注', async () => {
   await appointment.load()
   assert.equal(appointment.data.deal.code, 'MIX_1')
   appointment.data.voucherCode = 'TEST-001'
+  appointment.data.deliveryContactName = '测试'
+  appointment.data.deliveryPhone = '13800138000'
+  appointment.data.deliveryRegion = ['安徽省', '宿州市', '埇桥区']
+  appointment.data.deliveryAddress = '测试地址'
   await appointment.submit()
   const submitted = requests.find(item => item.url === '/pickup-orders').options.data
   assert.match(submitted.remark, /【团购套餐】衣服鞋任选 1 件，参考价¥10.9/)
+  assert.equal(submitted.deliveryProvince, '安徽省')
   assert.equal(app.globalData.pickupDraft, null)
 })
 
@@ -188,4 +202,32 @@ test('已注销账户不会在小程序启动时自动重建', async () => {
   await assert.rejects(app.ensureReady(), /账户已注销/)
   await app.reopenAccount()
   assert.equal(logins, 1)
+})
+
+test('模拟签收需确认，成功后刷新订单', async () => {
+  let confirmed = false
+  const calls = []
+  const app = {
+    ensureReady: async () => {},
+    request: async (url, options = {}) => {
+      calls.push({ url, options })
+      if (url === '/orders/7/test-deliver') return { status: 'DELIVERED' }
+      if (url === '/orders/7') return { simulatedDelivery: true, statusLabel: '模拟已签收' }
+      throw new Error(`unexpected ${url}`)
+    }
+  }
+  const page = loadPage('pages/order-detail/order-detail.js', app, {
+    showModal: ({ success }) => success({ confirm: confirmed }),
+    showToast() {}
+  })
+  page.id = 7
+  await page.simulateDelivery()
+  assert.equal(calls.length, 0)
+  confirmed = true
+  await page.simulateDelivery()
+  assert.deepEqual(calls.map(call => call.url), ['/orders/7/test-deliver', '/orders/7'])
+  assert.equal(calls[0].options.method, 'POST')
+  assert.ok(calls[0].options.header['X-Miniapp-Test-Key'])
+  assert.equal(page.data.order.statusLabel, '模拟已签收')
+  assert.equal(page.data.simulating, false)
 })

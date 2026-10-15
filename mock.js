@@ -14,9 +14,9 @@ const current = {
   totalCount: 2,
   receiveTime: '2026-10-04T15:30:00',
   urgent: false,
-  storeName: '小木棒洗衣示范门店',
-  storePhone: '021-55556666',
-  storeAddress: '上海市示范路 88 号',
+  storeName: '小木棒洗衣',
+  storePhone: '18430880874',
+  storeAddress: '安徽省宿州市埇桥区三八街道金方世纪城34幢120号',
   pickupCode: '1024',
   totalAmount: 76,
   discountAmount: 6,
@@ -68,7 +68,7 @@ module.exports = {
     if (path === '/member-card') return {
       active: true, id: 1, cardNo: 'MC20261008001', cardTypeName: '8.8折卡', discountRate: 8.8,
       balance: 286.4, totalRecharge: 600, totalConsume: 313.6,
-      storeName: '小木棒洗衣示范门店', storePhone: '021-55556666',
+      storeName: '小木棒洗衣', storePhone: '18430880874',
       rechargeOptions: [{ id: 1, name: '8.8折卡', amount: 300, discountRate: 8.8 }, { id: 2, name: '6.8折卡', amount: 500, discountRate: 6.8 }]
     }
     if (path === '/auth/bind-phone') return this.login()

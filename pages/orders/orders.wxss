@@ -4,6 +4,7 @@
 .order-row { padding: 30rpx 4rpx; border-bottom: 1rpx solid #d9e4f2; }
 .row-main { display: flex; align-items: center; }
 .status { font-size: 34rpx; font-weight: 780; }
+.status-hint { margin-top: 10rpx; color: #52647f; font-size: 25rpx; line-height: 1.45; }
 .meta { margin-top: 14rpx; }
 .bottom { display: flex; justify-content: space-between; margin-top: 18rpx; color: #5e6f89; font-size: 23rpx; }
 .mono { font-family: ui-monospace, monospace; }

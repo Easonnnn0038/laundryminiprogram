@@ -1,5 +1,6 @@
 .hero { margin: -40rpx -32rpx 0; padding: 52rpx 36rpx 42rpx; background: #154ea8; color: #fff; }
 .status { font-size: 48rpx; font-weight: 830; }
+.status-hint { margin-top: 14rpx; color: #e7f0ff; font-size: 27rpx; line-height: 1.5; }
 .order-no { margin-top: 14rpx; color: #d7e6ff; font-family: ui-monospace, monospace; font-size: 24rpx; }
 .pickup { margin-top: 40rpx; padding-top: 28rpx; border-top: 1rpx solid #4f7bc1; color: #e7f0ff; }
 .pickup-code { margin-top: 8rpx; color: #fff; font-family: ui-monospace, monospace; font-size: 82rpx; font-weight: 850; letter-spacing: 16rpx; }
@@ -15,3 +16,10 @@
 .item-meta, .special { margin-top: 10rpx; color: #5e6f89; font-size: 25rpx; }.special { color: #735616; }
 .details > view { display: flex; justify-content: space-between; padding: 14rpx 0; }.details .paid { margin-top: 8rpx; padding-top: 24rpx; border-top: 1rpx solid #cbd9ec; font-size: 34rpx; font-weight: 800; }
 .store { padding-bottom: 30rpx; }.store-name { margin-bottom: 10rpx; font-size: 34rpx; font-weight: 750; }.call { margin-top: 28rpx; }
+.delivery-address > view { gap: 24rpx; align-items: flex-start; }
+.delivery-address > view text:first-child { flex-shrink: 0; }
+.delivery-address > view text:last-child { text-align: right; overflow-wrap: anywhere; }
+.payment-panel { padding: 28rpx; }
+.payment-panel button { margin-top: 22rpx; }
+.test-action { margin-top: 28rpx; color: #5e6f89; font-size: 25rpx; line-height: 1.5; }
+.test-action button { margin-top: 16rpx; }

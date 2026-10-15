@@ -4,6 +4,7 @@
   <block wx:elif="{{order}}">
     <view class="hero">
       <view class="status">{{order.statusLabel}}<text wx:if="{{order.urgent}}" class="tag">加急</text></view>
+      <view wx:if="{{order.statusHint}}" class="status-hint">{{order.statusHint}}</view>
       <view class="order-no" bindtap="copyOrderNo" aria-role="button" aria-label="复制订单号 {{order.orderNo}}">{{order.orderNo}} · 点击复制</view>
       <view wx:if="{{order.pickupCode}}" class="pickup">
         <view>到店出示取衣码</view>
@@ -32,9 +33,29 @@
       <view><text>衣物原价</text><text>¥{{order.totalAmount}}</text></view>
       <view><text>优惠</text><text>-¥{{order.discountAmount}}</text></view>
       <view><text>加急费</text><text>¥{{order.urgentSurcharge}}</text></view>
+      <view wx:if="{{order.fulfillmentMethod === 'HOME_DELIVERY' && order.deliveryBillingStatus !== 'AWAITING_FEE'}}"><text>寄回运费</text><text>¥{{order.deliveryFee}}</text></view>
       <view class="paid"><text>实收</text><text>¥{{order.totalPaid}}</text></view>
       <view><text>支付方式</text><text>{{order.paymentMethod}}</text></view>
     </view>
+
+    <block wx:if="{{order.fulfillmentMethod === 'HOME_DELIVERY'}}">
+      <view class="section-title">快递寄回</view>
+      <view class="details delivery-address">
+        <view><text>收件人</text><text>{{order.deliveryContactName}} {{order.deliveryPhone}}</text></view>
+        <view><text>收件地址</text><text>{{order.deliveryAddress}}</text></view>
+      </view>
+      <view wx:if="{{order.simulatedDelivery}}" class="notice">本地测试已结束此订单，现可在“历史订单”查看。未发生真实快递签收，费用状态未改变。</view>
+      <view wx:elif="{{order.deliveryBillingStatus === 'AWAITING_FEE'}}" class="notice">最终费用尚未确认。工厂打包后需确认寄回运费并出账单，付款完成后才会安排快递。</view>
+      <view wx:elif="{{order.deliveryBillingStatus === 'AWAITING_PAYMENT'}}" class="surface payment-panel">
+        <view>最终账单待支付：¥{{order.debtAmount}}</view>
+        <button class="primary" loading="{{paying}}" disabled="{{paying}}" bindtap="pay">微信支付并等待寄回</button>
+      </view>
+      <view wx:elif="{{order.deliveryBillingStatus === 'PAID'}}" class="notice">费用已结清。请以订单进度为准；“待快递揽收”不代表快递已经收件。</view>
+      <view wx:if="{{order.canSimulateDelivery}}" class="test-action">
+        <view>仅本地测试：跳过付款与快递，直接结束这笔测试订单。</view>
+        <button class="secondary" loading="{{simulating}}" disabled="{{simulating}}" bindtap="simulateDelivery">模拟签收并结束订单</button>
+      </view>
+    </block>
 
     <view class="section-title">收衣门店</view>
     <view class="store">

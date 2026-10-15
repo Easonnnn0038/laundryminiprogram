@@ -12,6 +12,7 @@
   <block wx:else>
     <view wx:for="{{orders}}" wx:key="id" class="order-row" bindtap="openOrder" data-id="{{item.id}}" aria-role="button" aria-label="订单当前{{item.statusLabel}}">
       <view class="row-main"><text class="status">{{item.statusLabel}}</text><text wx:if="{{item.urgent}}" class="tag">加急</text></view>
+      <view wx:if="{{item.statusHint}}" class="status-hint">{{item.statusHint}}</view>
       <view wx:if="{{tab === 'pickup'}}" class="meta">{{item.appointmentDate}} {{item.appointmentSlot}}</view>
       <view wx:else class="meta">{{item.totalCount}} 件 · {{item.storeName}}</view>
       <view wx:if="{{tab === 'pickup'}}" class="bottom"><text>{{item.pickupAddress}}</text><text>¥{{item.paidAmount || item.estimatedAmount}}</text></view>
