@@ -1,5 +1,5 @@
 .identity { display: flex; align-items: center; margin-top: 52rpx; padding: 34rpx 0; }
-.avatar { display: flex; align-items: center; justify-content: center; width: 96rpx; height: 96rpx; margin-right: 24rpx; border-radius: 24rpx; background: #155eef; color: #fff; font-size: 42rpx; font-weight: 800; }
+.avatar { width: 96rpx; height: 96rpx; margin-right: 24rpx; border-radius: 24rpx; background: #fff; }
 .identity-title { font-size: 34rpx; font-weight: 760; }
 .bind { margin: 10rpx 0 38rpx; }
 .member-error { display: flex; align-items: center; justify-content: space-between; margin-top: 24rpx; padding: 26rpx 4rpx; border-top: 1rpx solid #d9e4f2; border-bottom: 1rpx solid #d9e4f2; color: #813b25; }

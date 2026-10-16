@@ -6,7 +6,7 @@
   <view wx:elif="{{closed}}" class="empty">账户已注销。需要再次使用服务时，可重新开通。<button class="primary reopen" bindtap="reopenAccount">重新开通</button></view>
   <block wx:else>
   <view class="identity">
-    <view class="avatar">木</view>
+    <image class="avatar" src="/assets/brand-logo.png" mode="aspectFit" aria-label="小木棒洗衣标志" />
     <view><view class="identity-title">微信顾客</view><view class="subtitle">{{bound ? phone : '尚未绑定手机号'}}</view></view>
   </view>
   <button wx:if="{{!bound}}" class="primary bind" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>

@@ -3,6 +3,7 @@
   <view wx:if="{{loading}}" class="loading">正在准备服务…</view>
   <view wx:elif="{{!bound}}" class="bind-screen">
     <image class="bind-hero" src="/assets/home-hero.jpg" mode="aspectFill" />
+    <image class="brand-mark bind-brand" src="/assets/brand-logo.png" mode="aspectFit" />
     <view class="eyebrow">小木棒洗衣</view>
     <view class="title">先绑定手机号，<br/>再开始预约</view>
     <view class="subtitle">手机号用于保存联系人、地址和匹配您的洗衣订单。</view>
@@ -14,6 +15,7 @@
       <image src="/assets/home-hero.jpg" mode="aspectFill" />
       <view class="hero-shade"></view>
       <view class="hero-copy">
+        <image class="brand-mark" src="/assets/brand-logo.png" mode="aspectFit" />
         <view class="eyebrow">上门取送 · 专业洗护</view>
         <view class="hero-title">洗衣这件事，<br/>简单一点。</view>
         <view class="hero-subtitle">选好衣物，我们按时上门</view>
