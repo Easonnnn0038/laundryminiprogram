@@ -16,18 +16,10 @@ Page({
   async load() {
     this.setData({ loading: true, error: '' })
     try { await app.ensureReady(); const deals=await loadDeals(app);this.setData({ bound: app.globalData.bound,featuredDeals:deals.filter(item=>item.featured) }) }
-    catch (e) { this.setData({ error: e.message }) }
+    catch (e) { this.setData({ bound: false, error: ['请先登录', '登录已过期，请重新登录'].includes(e.message) ? '' : e.message }) }
     finally { this.setData({ loading: false }) }
   },
-  async bindPhone(e) {
-    if (!e.detail.code) return this.setData({ error: '需要绑定手机号后才能预约上门取衣。' })
-    this.setData({ loading: true, error: '' })
-    try {
-      const data = await app.request('/auth/bind-phone', { method: 'POST', data: { code: e.detail.code } })
-      app.saveAuth(data); this.setData({ bound: true })
-    } catch (err) { this.setData({ error: err.message }) }
-    finally { this.setData({ loading: false }) }
-  },
+  goLogin() { wx.navigateTo({ url: '/pages/login/login' }) },
   retry() { app.globalData.ready = null; this.load() },
   openDeals() { wx.navigateTo({ url: '/pages/deals/deals' }) },
   openDeal(e) { wx.navigateTo({ url: `/pages/pickup-order/pickup-order?group=${e.currentTarget.dataset.group}&deal=${e.currentTarget.dataset.code}` }) },

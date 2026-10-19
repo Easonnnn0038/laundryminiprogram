@@ -1,13 +1,18 @@
 <view class="page home-page">
   <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="retry">重试</button></view>
-  <view wx:if="{{loading}}" class="loading">正在准备服务…</view>
+  <view wx:if="{{loading}}" class="loading-shell" aria-label="正在加载首页">
+    <view class="loading-block loading-hero"></view>
+    <view class="loading-block loading-heading"></view>
+    <view class="loading-block loading-card"></view>
+    <view class="loading-hint">正在准备服务…</view>
+  </view>
   <view wx:elif="{{!bound}}" class="bind-screen">
     <image class="bind-hero" src="/assets/home-hero.jpg" mode="aspectFill" />
     <image class="brand-mark bind-brand" src="/assets/brand-logo.png" mode="aspectFit" />
     <view class="eyebrow">小木棒洗衣</view>
-    <view class="title">先绑定手机号，<br/>再开始预约</view>
+    <view class="title">登录后，<br/>开始预约洗衣</view>
     <view class="subtitle">手机号用于保存联系人、地址和匹配您的洗衣订单。</view>
-    <button class="primary bind-button" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>
+    <button class="primary bind-button" bindtap="goLogin">前往登录</button>
     <view class="privacy-note">仅用于本次服务与订单通知</view>
   </view>
   <block wx:else>

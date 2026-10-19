@@ -2,14 +2,19 @@
   <view class="title">我的</view>
   <view class="subtitle">管理手机号、联系人和常用上门地址。</view>
   <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
-  <view wx:if="{{loading}}" class="empty">正在读取账户信息…</view>
+  <view wx:if="{{loading}}" class="loading-shell" aria-label="正在加载账户">
+    <view class="loading-profile"><view class="loading-block loading-avatar"></view><view class="loading-block loading-name"></view></view>
+    <view class="loading-block loading-member"></view>
+    <view class="loading-block loading-menu"></view>
+    <view class="loading-hint">正在读取账户信息…</view>
+  </view>
   <view wx:elif="{{closed}}" class="empty">账户已注销。需要再次使用服务时，可重新开通。<button class="primary reopen" bindtap="reopenAccount">重新开通</button></view>
   <block wx:else>
   <view class="identity">
     <image class="avatar" src="/assets/brand-logo.png" mode="aspectFit" aria-label="小木棒洗衣标志" />
-    <view><view class="identity-title">微信顾客</view><view class="subtitle">{{bound ? phone : '尚未绑定手机号'}}</view></view>
+    <view><view class="identity-title">顾客账户</view><view class="subtitle">{{authenticated ? (bound ? phone : '尚未绑定手机号') : '尚未登录'}}</view></view>
   </view>
-  <button wx:if="{{!bound}}" class="primary bind" open-type="getPhoneNumber" bindgetphonenumber="bindPhone">绑定手机号</button>
+  <button wx:if="{{!bound}}" class="primary bind" bindtap="goLogin">登录并绑定手机号</button>
   <block wx:if="{{bound}}">
     <view wx:if="{{memberError}}" class="member-error"><text>{{memberError}}</text><button bindtap="load">重新加载</button></view>
     <view wx:elif="{{memberCard && memberCard.active}}" class="member-card">
@@ -25,6 +30,7 @@
     <view bindtap="showPrivacy" aria-role="button" aria-label="查看隐私说明"><text>隐私说明</text><text class="hint">›</text></view>
     <view bindtap="showDeletion" aria-role="button" aria-label="申请删除个人资料或注销账户"><text>个人资料与注销</text><text class="hint">›</text></view>
   </view>
+  <button wx:if="{{authenticated}}" class="logout-button" disabled="{{loggingOut}}" bindtap="logout">退出登录</button>
   </block>
   <view class="foot">小木棒洗衣 · 顾客服务</view>
 </view>

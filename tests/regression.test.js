@@ -31,6 +31,152 @@ function loadPage(relative, app, wxOverrides = {}) {
   return page
 }
 
+test('手机号密码登录在输入有效时请求后端，失败时留在页面', async () => {
+  const destinations = []
+  const calls = []
+  const app = {
+    globalData: { bound: false, accountClosed: false, token: '', mockMode: true, serverTestMode: true },
+    ensureReady: async () => {},
+    passwordLogin: async (phone, password) => { calls.push({ phone, password }); if (password === 'wrong') throw new Error('手机号或密码不正确') }
+  }
+  const page = loadPage('pages/login/login.js', app, { switchTab: ({ url }) => destinations.push(url) })
+  await page.prepare()
+  assert.deepEqual(destinations, [])
+  assert.equal(calls.length, 0)
+  await page.submitPassword()
+  assert.match(page.data.error, /手机号/)
+  assert.equal(calls.length, 0)
+  page.inputPhone({ detail: { value: '13900000000' } })
+  page.inputPassword({ detail: { value: 'wrong' } })
+  await page.submitPassword()
+  assert.match(page.data.error, /不正确/)
+  assert.equal(destinations.length, 0)
+  page.inputPassword({ detail: { value: 'correct-test-password' } })
+  await page.submitPassword()
+  assert.deepEqual(calls[1], { phone: '13900000000', password: 'correct-test-password' })
+  assert.equal(page.data.password, '')
+  assert.deepEqual(destinations, ['/pages/home/home'])
+})
+
+test('已注销账户在登录页保持关闭，必须由顾客明确重新开通', async () => {
+  let reopenCount = 0
+  const app = {
+    globalData: { accountClosed: true, bound: false },
+    ensureReady: async () => { throw new Error('不应自动登录') },
+    reopenAccount: async () => { reopenCount++; app.globalData.accountClosed = false }
+  }
+  const page = loadPage('pages/login/login.js', app)
+  await page.prepare()
+  assert.equal(page.data.closed, true)
+  assert.equal(reopenCount, 0)
+  await page.reopenAccount()
+  assert.equal(reopenCount, 1)
+  assert.equal(page.data.closed, false)
+})
+
+test('本地演示可预览登录页再进入首页', async () => {
+  const destinations = []
+  const app = { globalData: { bound: true, accountClosed: false, mockMode: true, serverTestMode: false }, ensureReady: async () => {} }
+  const page = loadPage('pages/login/login.js', app, { switchTab: ({ url }) => destinations.push(url) })
+  await page.prepare()
+  assert.equal(page.data.demo, true)
+  assert.deepEqual(destinations, [])
+  page.enterDemo()
+  assert.deepEqual(destinations, ['/pages/home/home'])
+})
+
+test('手机号密码登录使用公开接口，且只保存令牌不保存密码', async () => {
+  storage.clear()
+  let definition, request
+  global.App = value => { definition = value }
+  global.wx = {
+    getAccountInfoSync: () => ({ miniProgram: { appId: 'real-appid' } }),
+    getStorageSync: key => storage.get(key), setStorageSync: (key, value) => storage.set(key, value),
+    removeStorageSync: key => storage.delete(key),
+    request: options => { request = options; options.success({ statusCode: 200, data: { code: 200, data: { token: 'test-token', bound: true, phone: '139****0000' } } }) }
+  }
+  const filename = path.join(root, 'app.js')
+  delete require.cache[require.resolve(filename)]
+  require(filename)
+  const app = { ...definition, globalData: { ...definition.globalData } }
+  assert.equal(request, undefined)
+  await app.passwordLogin('13900000000', 'test-password')
+  assert.match(request.url, /\/auth\/password-login$/)
+  assert.equal(request.header.Authorization, undefined)
+  assert.equal(storage.get('token'), 'test-token')
+  assert.equal(storage.get('authSource'), 'password')
+  assert.equal([...storage.values()].includes('test-password'), false)
+})
+
+test('主动退出清除本机账号与草稿，重开小程序也不会自动登录', async () => {
+  storage.clear()
+  storage.set('token', 'old-token')
+  storage.set('authSource', 'password')
+  storage.set('pickupDraft', { selected: [1] })
+  let definition, wechatLogins = 0
+  global.App = value => { definition = value }
+  global.wx = {
+    getAccountInfoSync: () => ({ miniProgram: { appId: 'real-appid' } }),
+    getStorageSync: key => storage.get(key), setStorageSync: (key, value) => storage.set(key, value),
+    removeStorageSync: key => storage.delete(key),
+    login: ({ success }) => { wechatLogins++; success({ code: 'fresh-code' }) },
+    request: ({ success }) => success({ statusCode: 200, data: { code: 200, data: { token: 'new-token', bound: true, phone: '139****0000' } } })
+  }
+  const filename = path.join(root, 'app.js')
+  delete require.cache[require.resolve(filename)]
+  require(filename)
+  const app = { ...definition, globalData: { ...definition.globalData } }
+  app.logout()
+  assert.equal(storage.get('token'), undefined)
+  assert.equal(storage.get('pickupDraft'), undefined)
+  assert.equal(storage.get('loggedOut'), true)
+  app.onLaunch()
+  await assert.rejects(app.ensureReady(), /请先登录/)
+  assert.equal(wechatLogins, 0)
+  await app.login()
+  assert.equal(storage.get('loggedOut'), undefined)
+  assert.equal(storage.get('token'), 'new-token')
+})
+
+test('个人中心取消退出时保留登录，确认后回登录页', async () => {
+  let confirmed = false, logouts = 0
+  const destinations = []
+  const app = { globalData: { accountClosed: false }, logout: () => { logouts++ } }
+  const page = loadPage('pages/profile/profile.js', app, {
+    showModal: async () => ({ confirm: confirmed }),
+    reLaunch: ({ url }) => destinations.push(url)
+  })
+  await page.logout()
+  assert.equal(logouts, 0)
+  confirmed = true
+  await page.logout()
+  assert.equal(logouts, 1)
+  assert.deepEqual(destinations, ['/pages/login/login'])
+})
+
+test('退出前发出的登录请求不能在返回后恢复账号', async () => {
+  storage.clear()
+  let definition, completeLogin
+  global.App = value => { definition = value }
+  global.wx = {
+    getAccountInfoSync: () => ({ miniProgram: { appId: 'real-appid' } }),
+    getStorageSync: key => storage.get(key), setStorageSync: (key, value) => storage.set(key, value),
+    removeStorageSync: key => storage.delete(key),
+    login: ({ success }) => success({ code: 'old-code' }),
+    request: ({ success }) => { completeLogin = success }
+  }
+  const filename = path.join(root, 'app.js')
+  delete require.cache[require.resolve(filename)]
+  require(filename)
+  const app = { ...definition, globalData: { ...definition.globalData } }
+  const pending = app.login()
+  app.logout()
+  completeLogin({ statusCode: 200, data: { code: 200, data: { token: 'stale-token', bound: true } } })
+  await assert.rejects(pending, /请先登录/)
+  assert.equal(storage.get('token'), undefined)
+  assert.equal(storage.get('loggedOut'), true)
+})
+
 test('套餐从选衣页完整传递到预约备注', async () => {
   storage.clear()
   const requests = []
@@ -110,12 +256,12 @@ test('选衣与预约草稿可在页面重新创建后恢复', async () => {
   assert.equal(restored.data.count, 2)
 })
 
-test('401 后重新登录并继续原页面的 GET 请求', async () => {
+test('正式微信模式 401 后重新登录并继续原页面的 GET 请求', async () => {
   let definition, logins = 0, reads = 0
   global.App = value => { definition = value }
   global.wx = {
     getAccountInfoSync: () => ({ miniProgram: { appId: 'real-appid' } }),
-    getStorageSync: () => '', setStorageSync: () => {},
+    getStorageSync: () => '', setStorageSync: () => {}, removeStorageSync: () => {},
     login: ({ success }) => { logins++; success({ code: 'fresh-code' }) },
     request: ({ url, success }) => {
       if (url.endsWith('/auth/login')) return success({ statusCode: 200, data: { code: 200, data: { token: 'fresh-token', bound: true } } })

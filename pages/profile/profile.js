@@ -1,14 +1,14 @@
 const app = getApp()
 Page({
-  data: { loading: true, closed: false, bound: false, phone: '', memberCard: null, memberError: '', error: '' },
+  data: { loading: true, closed: false, bound: false, authenticated: false, loggingOut: false, phone: '', memberCard: null, memberError: '', error: '' },
   onShow() { this.load() },
   async load() {
-    if (app.globalData.accountClosed) return this.setData({ loading: false, closed: true, error: '' })
+    if (app.globalData.accountClosed) return this.setData({ loading: false, closed: true, authenticated: false, error: '' })
     this.setData({ loading: true, closed: false, error: '', memberError: '' })
     try {
       await app.ensureReady()
       const data = await app.request('/profile')
-      this.setData({ ...data, memberCard: null })
+      this.setData({ ...data, authenticated: true, memberCard: null })
       if (data.bound) {
         try {
           const memberCard = await app.request('/member-card')
@@ -22,22 +22,25 @@ Page({
         }
       }
     }
-    catch (e) { this.setData({ error: e.message }) }
+    catch (e) { this.setData({ bound: false, authenticated: false, error: ['请先登录', '登录已过期，请重新登录'].includes(e.message) ? '' : e.message }) }
     finally { this.setData({ loading: false }) }
   },
   async reopenAccount() {
     this.setData({ loading: true, error: '' })
-    try { await app.reopenAccount(); await this.load() }
+    try { await app.reopenAccount(); wx.navigateTo({ url: '/pages/login/login' }) }
     catch (e) { this.setData({ loading: false, error: e.message }) }
   },
-  async bindPhone(e) {
-    if (!e.detail.code) return this.setData({ error: '需要绑定手机号才能查看本人订单，您可以稍后重试。' })
-    this.setData({ loading: true, error: '' })
-    try { const data = await app.request('/auth/bind-phone', { method: 'POST', data: { code: e.detail.code } }); app.saveAuth(data); await this.load() }
-    catch (err) { this.setData({ error: err.message, loading: false }) }
+  goLogin() { wx.navigateTo({ url: '/pages/login/login' }) },
+  async logout() {
+    if (this.data.loggingOut) return
+    const choice = await wx.showModal({ title: '退出登录？', content: '退出后需重新登录，未提交的本机草稿会清除。', confirmText: '退出登录' })
+    if (!choice.confirm) return
+    this.setData({ loggingOut: true })
+    app.logout()
+    wx.reLaunch({ url: '/pages/login/login' })
   },
   openAddresses() {
-    if (!this.data.bound) return this.setData({ error: '请先绑定手机号' })
+    if (!this.data.bound) return this.goLogin()
     wx.navigateTo({ url: '/pages/addresses/addresses' })
   },
   recharge() {

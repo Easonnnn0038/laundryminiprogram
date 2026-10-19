@@ -26,3 +26,4 @@
 .hint { color: #66758c; font-weight: 400; }
 .foot { margin-top: 100rpx; text-align: center; color: #7b8aa0; font-size: 23rpx; }
 .reopen { margin-top: 28rpx; min-height: 84rpx; line-height: 84rpx; }
+.logout-button { height: 84rpx; margin-top: 40rpx; border: 1rpx solid #d9e4f2; background: #fff; color: #5e6f89; font-size: 27rpx; line-height: 82rpx; }

@@ -12,3 +12,17 @@ button::after { border: 0; }
 .error { margin: 24rpx 0; padding: 24rpx; border-radius: 16rpx; background: #f9e9e1; color: #813b25; }
 .tag { display: inline-block; margin-left: 12rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #dceaff; color: #164e9c; font-size: 22rpx; font-weight: 700; }
 .error .retry { display: inline-block; width: auto; height: auto; margin: 0 0 0 14rpx; padding: 0 8rpx; background: transparent; color: #813b25; font-size: 26rpx; line-height: 1.5; text-decoration: underline; vertical-align: baseline; }
+.loading-shell { padding-top: 24rpx; }
+.loading-block { background: #dfe8f6; border-radius: 16rpx; animation: loading-pulse 1.4s ease-in-out infinite; }
+.loading-hero { height: 360rpx; border-radius: 30rpx; }
+.loading-heading { width: 46%; height: 42rpx; margin-top: 48rpx; }
+.loading-card { height: 190rpx; margin-top: 24rpx; }
+.loading-row { height: 154rpx; margin-top: 22rpx; background: #e5ecf8; }
+.loading-profile { display: flex; align-items: center; gap: 24rpx; margin-top: 30rpx; }
+.loading-avatar { width: 96rpx; height: 96rpx; border-radius: 24rpx; }
+.loading-name { width: 42%; height: 36rpx; }
+.loading-member { height: 260rpx; margin-top: 48rpx; background: #cbdcf7; }
+.loading-menu { height: 68rpx; margin-top: 48rpx; }
+.loading-hint { margin-top: 28rpx; color: #5e6f89; font-size: 24rpx; text-align: center; }
+@keyframes loading-pulse { 0%, 100% { opacity: .52; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .loading-block { animation: none; } }

@@ -3,13 +3,16 @@ const { loadDeals } = require('../../utils/deals')
 const groupLabels = { CLOTHES: '衣物', SHOES: '鞋类', HOME: '家纺卧室', IRON: '单烫', LEATHER: '皮衣护理', BAG: '包包' }
 
 Page({
-  data: { loading: true, error: '', catalog: [], visibleCatalog: [], groups: [], activeGroup: '', count: 0, total: '0.00', discount: '0.00', memberCardType: '', deal: null },
+  data: { loading: true, error: '', needsLogin: false, catalog: [], visibleCatalog: [], groups: [], activeGroup: '', count: 0, total: '0.00', discount: '0.00', memberCardType: '', deal: null },
   onLoad(options) { this.initialGroup = options.group || 'CLOTHES'; this.dealCode=options.deal||''; this.load() },
   async load() {
-    this.setData({ loading: true, error: '' })
+    this.setData({ loading: true, error: '', needsLogin: false })
     try {
       await app.ensureReady()
-      if (!app.globalData.bound) throw new Error('请先在首页绑定手机号')
+      if (!app.globalData.bound) {
+        this.setData({ needsLogin: true })
+        throw new Error('请先登录并绑定手机号')
+      }
       const [catalog,deals] = await Promise.all([app.request('/pickup-catalog'),loadDeals(app)])
       const savedDraft = app.globalData.pickupDraft || wx.getStorageSync('pickupDraft') || {}
       this.selectedDeal=deals.find(item=>item.code===(this.dealCode || savedDraft.deal?.code))||this.selectedDeal||null
@@ -19,9 +22,10 @@ Page({
       const activeGroup = groups.some(item => item.key === this.initialGroup) ? this.initialGroup : (groups[0] && groups[0].key || '')
       const member = items.find(item => item.member)
       this.setData({ catalog: items, groups, activeGroup, visibleCatalog: items.filter(item => item.categoryGroup === activeGroup), memberCardType: member ? member.cardTypeName : '', deal: this.selectedDeal }, () => this.calculate())
-    } catch (e) { this.setData({ error: e.message }) }
+    } catch (e) { this.setData({ error: e.message, needsLogin: this.data.needsLogin || ['请先登录', '登录已过期，请重新登录'].includes(e.message) }) }
     finally { this.setData({ loading: false }) }
   },
+  goLogin() { wx.navigateTo({ url: '/pages/login/login' }) },
   selectGroup(e) {
     const activeGroup = e.currentTarget.dataset.group
     this.setData({ activeGroup, visibleCatalog: this.data.catalog.filter(item => item.categoryGroup === activeGroup) })

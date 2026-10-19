@@ -6,8 +6,13 @@
     <view class="tab {{tab === 'pickup' ? 'active' : ''}}" data-tab="pickup" bindtap="selectTab" aria-role="tab" aria-label="上门预约">上门预约</view>
   </view>
   <view wx:if="{{error}}" class="error">{{error}}<button class="retry" bindtap="load">重试</button></view>
-  <view wx:if="{{loading}}" class="empty">正在加载…</view>
-  <view wx:elif="{{!bound}}" class="surface empty"><view>请先在首页绑定手机号。</view><button class="secondary small" bindtap="goHome">前往首页</button></view>
+  <view wx:if="{{loading}}" class="loading-shell" aria-label="正在加载订单">
+    <view class="loading-block loading-row"></view>
+    <view class="loading-block loading-row"></view>
+    <view class="loading-block loading-row"></view>
+    <view class="loading-hint">正在读取订单…</view>
+  </view>
+  <view wx:elif="{{!bound}}" class="surface empty"><view>登录后查看您的订单。</view><button class="secondary small" bindtap="goLogin">前往登录</button></view>
   <view wx:elif="{{!orders.length}}" class="surface empty">{{tab === 'current' ? '没有进行中的订单' : tab === 'pickup' ? '还没有上门预约' : '还没有历史订单'}}</view>
   <block wx:else>
     <view wx:for="{{orders}}" wx:key="id" class="order-row" bindtap="openOrder" data-id="{{item.id}}" aria-role="button" aria-label="订单当前{{item.statusLabel}}">

@@ -2,7 +2,7 @@
   <view class="title">个人信息说明</view>
   <view class="subtitle">以下说明对应当前小程序功能。正式隐私政策还需由运营主体在发布前确认。</view>
   <view class="section-title">我们使用哪些信息</view>
-  <view class="privacy-copy">微信登录标识用于识别账户；您授权的手机号用于匹配本人订单、保存联系人和预约信息。预约时填写的地址、衣物清单和备注用于上门服务。订单页面只向已验证手机号展示对应订单和取衣信息。</view>
+  <view class="privacy-copy">本地测试阶段可使用测试手机号和密码登录；密码仅提交给测试后端核验，不保存在小程序本机。后续开通短信服务后，验证码可用于验证手机号。您提供或授权的手机号用于匹配本人订单、保存联系人和预约信息。预约时填写的地址、衣物清单和备注用于上门服务。订单页面按已验证的账户手机号展示对应订单和取衣信息。</view>
   <view class="section-title">本机草稿</view>
   <view class="privacy-copy">未提交的选衣、地址填写和预约内容会保存在当前设备，方便中途返回继续填写。清除草稿不会删除已经提交到门店的订单和地址。</view>
   <button class="secondary clear-button" bindtap="clearDrafts">清除本机草稿</button>
