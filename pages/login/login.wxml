@@ -1,34 +1,49 @@
 <view class="login-page">
-  <view class="login-top">
-    <image class="logo" src="/assets/brand-logo.png" mode="aspectFit" aria-label="小木棒洗衣标志" />
-    <text class="brand">小木棒洗衣</text>
-  </view>
-  <image class="hero" src="/assets/home-hero.jpg" mode="aspectFill" />
-  <view class="content">
-    <view class="headline">欢迎回来</view>
-    <view class="description">登录后查看订单与洗护进度，也可以预约上门取衣。</view>
-    <view wx:if="{{error}}" class="error">{{error}}</view>
-    <view wx:if="{{loading}}" class="status">正在准备服务…</view>
-    <button wx:elif="{{closed}}" class="primary action" bindtap="reopenAccount">重新开通账户</button>
-    <button wx:elif="{{demo}}" class="primary action" bindtap="enterDemo">进入演示</button>
-    <button wx:elif="{{wechatMode}}" class="primary action" open-type="getPhoneNumber" bindgetphonenumber="bindPhone" loading="{{submitting}}" disabled="{{submitting}}">微信手机号快捷登录</button>
-    <block wx:else>
-      <view class="mode-tabs">
+  <view class="login-stage">
+    <image class="scene" src="/assets/login-conveyor.jpg" mode="scaleToFill" aria-hidden="true" />
+
+    <block wx:if="{{!loading && !closed && !demo && !wechatMode}}">
+      <view wx:if="{{mode === 'register'}}" class="register-heading">
+        <text>手机号注册</text>
+        <text class="back-login" data-mode="password" bindtap="changeMode" aria-role="button">返回登录</text>
+      </view>
+      <view wx:else class="mode-tabs">
         <view class="mode-tab {{mode === 'password' ? 'active' : ''}}" data-mode="password" bindtap="changeMode" aria-role="button">密码登录</view>
         <view class="mode-tab {{mode === 'sms' ? 'active' : ''}}" data-mode="sms" bindtap="changeMode" aria-role="button">验证码登录</view>
       </view>
-      <view wx:if="{{mode === 'register'}}" class="form-title">手机号注册</view>
-      <view class="field"><text>手机号</text><input type="number" maxlength="11" value="{{phone}}" bindinput="inputPhone" placeholder="请输入手机号" /></view>
-      <view wx:if="{{mode === 'password'}}" class="field"><text>密码</text><input password="{{true}}" value="{{password}}" bindinput="inputPassword" placeholder="请输入密码" /></view>
-      <view wx:else class="field"><text>短信验证码</text><view class="code-row"><input type="number" maxlength="6" value="{{code}}" bindinput="inputCode" placeholder="请输入验证码" /><text>暂未开通</text></view></view>
-      <button wx:if="{{mode === 'password'}}" class="primary action" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submitPassword">登录</button>
-      <button wx:else class="primary action unavailable" disabled="{{true}}">{{mode === 'register' ? '注册（短信服务开通后可用）' : '验证码登录（暂未开通）'}}</button>
-      <view class="form-footer">
-        <text wx:if="{{mode !== 'register'}}" data-mode="register" bindtap="changeMode">没有账号？去注册</text>
-        <text wx:else data-mode="password" bindtap="changeMode">已有账号？去登录</text>
+      <view class="input-slot phone-slot">
+        <input type="number" maxlength="11" value="{{phone}}" bindinput="inputPhone" placeholder="请输入手机号" placeholder-class="input-placeholder" aria-label="手机号" />
       </view>
-      <view class="future-note">短信服务开通后支持验证码登录和注册；微信手机号一键登录将在备案和相关服务就绪后开放。</view>
+      <view wx:if="{{mode === 'password'}}" class="input-slot secret-slot">
+        <input password="{{true}}" value="{{password}}" bindinput="inputPassword" bindconfirm="submitPassword" placeholder="请输入密码" placeholder-class="input-placeholder" aria-label="密码" />
+      </view>
+      <view wx:else class="input-slot secret-slot code-slot">
+        <input type="number" maxlength="6" value="{{code}}" bindinput="inputCode" placeholder="短信验证码" placeholder-class="input-placeholder" disabled="{{true}}" aria-label="短信验证码，暂未开通" />
+        <text class="code-unavailable">暂未开通</text>
+      </view>
     </block>
+
+    <view wx:if="{{loading}}" class="access-note">正在准备服务…</view>
+    <view wx:elif="{{closed}}" class="access-note">账户已注销，可重新开通</view>
+    <view wx:elif="{{demo}}" class="access-note">欢迎体验小木棒洗衣</view>
+    <view wx:elif="{{wechatMode}}" class="access-note">使用微信验证的手机号登录</view>
+
+    <view wx:if="{{error}}" class="login-error" aria-role="alert">{{error}}</view>
+    <button wx:if="{{loading}}" class="login-action" loading="{{true}}" disabled="{{true}}">正在准备</button>
+    <button wx:elif="{{closed}}" class="login-action" bindtap="reopenAccount">重新开通账户</button>
+    <button wx:elif="{{demo}}" class="login-action" bindtap="enterDemo">进入演示</button>
+    <button wx:elif="{{wechatMode}}" class="login-action" open-type="getPhoneNumber" bindgetphonenumber="bindPhone" loading="{{submitting}}" disabled="{{submitting}}">微信手机号快捷登录</button>
+    <button wx:elif="{{mode === 'password'}}" class="login-action" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submitPassword">登录</button>
+    <button wx:else class="login-action unavailable" disabled="{{true}}">{{mode === 'register' ? '注册暂未开通' : '验证码登录暂未开通'}}</button>
+  </view>
+
+  <view class="login-footer">
+    <view wx:if="{{!loading && !closed && !demo && !wechatMode}}" class="form-footer">
+      <text wx:if="{{mode !== 'register'}}" data-mode="register" bindtap="changeMode" aria-role="button">没有账号？去注册</text>
+      <text wx:else data-mode="password" bindtap="changeMode" aria-role="button">已有账号？去登录</text>
+    </view>
+    <view class="description">登录后查看订单与洗护进度，也可以预约上门取衣。</view>
+    <view wx:if="{{!loading && !closed && !demo && !wechatMode}}" class="future-note">短信服务开通后支持验证码登录和注册；微信手机号一键登录将在备案和相关服务就绪后开放。</view>
     <view class="privacy" bindtap="goPrivacy" aria-role="button" aria-label="查看隐私说明">查看隐私说明　›</view>
   </view>
 </view>

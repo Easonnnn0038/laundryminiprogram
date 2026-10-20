@@ -1,1 +1,24 @@
-.login-page{min-height:100vh;box-sizing:border-box;padding:20rpx 32rpx 64rpx;background:#f5f8ff}.login-top{display:flex;align-items:center;gap:18rpx;padding:12rpx 4rpx 24rpx}.logo{width:70rpx;height:70rpx;border-radius:16rpx;background:#fff}.brand{font-size:29rpx;font-weight:800}.hero{display:block;width:100%;height:250rpx;border-radius:24rpx;background:#dceaff}.content{padding:36rpx 8rpx 0}.headline{font-size:52rpx;line-height:1.2;font-weight:800}.description{margin-top:12rpx;color:#5e6f89;font-size:25rpx;line-height:1.55}.status{margin-top:50rpx;color:#5e6f89;text-align:center}.mode-tabs{display:flex;gap:42rpx;margin-top:34rpx;border-bottom:1rpx solid #d9e4f2}.mode-tab{padding:0 0 18rpx;color:#5e6f89;font-size:28rpx;font-weight:650}.mode-tab.active{border-bottom:4rpx solid #155eef;color:#155eef}.form-title{margin-top:26rpx;font-size:30rpx;font-weight:750}.field{margin-top:28rpx}.field>text{display:block;margin-bottom:12rpx;color:#172b4d;font-size:25rpx;font-weight:650}.field input{height:82rpx;padding:0 22rpx;border:1rpx solid #d9e4f2;border-radius:14rpx;background:#fff;font-size:28rpx;box-sizing:border-box}.code-row{display:flex;align-items:center;gap:18rpx}.code-row input{flex:1;min-width:0}.code-row text{color:#6f7f95;font-size:24rpx}.action{height:88rpx;margin-top:36rpx;line-height:88rpx;font-size:29rpx}.unavailable{background:#aab7cc;color:#fff}.form-footer{margin-top:28rpx;color:#155eef;font-size:25rpx;text-align:center}.future-note{margin-top:30rpx;color:#5e6f89;font-size:23rpx;line-height:1.6}.privacy{margin-top:32rpx;color:#155eef;font-size:24rpx;text-align:center}.error{margin:24rpx 0 0}
+.login-page { min-height: 100vh; background: #dff8fa; color: #17354c; }
+.login-stage { position: relative; width: 750rpx; height: 1332rpx; margin: 0 auto; }
+.scene { display: block; width: 750rpx; height: 1332rpx; }
+.mode-tabs, .register-heading { position: absolute; top: 736rpx; left: 207rpx; width: 508rpx; height: 53rpx; display: flex; align-items: center; justify-content: space-around; box-sizing: border-box; border-radius: 14rpx; background: rgba(237, 252, 252, .96); }
+.mode-tab { padding: 9rpx 8rpx; color: #3f6477; font-size: 26rpx; font-weight: 600; }
+.mode-tab.active { color: #006c9b; border-bottom: 4rpx solid #009dc4; }
+.register-heading { justify-content: space-between; padding: 0 22rpx; font-size: 27rpx; font-weight: 700; }
+.back-login { color: #006c9b; font-size: 24rpx; font-weight: 500; }
+.input-slot { position: absolute; left: 205rpx; width: 515rpx; height: 109rpx; display: flex; align-items: center; box-sizing: border-box; }
+.phone-slot { top: 797rpx; }
+.secret-slot { top: 982rpx; }
+.input-slot input { width: 100%; height: 100%; box-sizing: border-box; padding: 0 37rpx; background: transparent; color: #17354c; font-size: 29rpx; }
+.input-placeholder { color: #526c7d; }
+.code-slot input { padding-right: 0; }
+.code-unavailable { flex: none; margin-right: 31rpx; color: #577587; font-size: 22rpx; }
+.access-note { position: absolute; top: 814rpx; left: 245rpx; width: 440rpx; color: #31596d; font-size: 27rpx; line-height: 70rpx; text-align: center; }
+.login-error { position: absolute; top: 1100rpx; left: 205rpx; width: 515rpx; box-sizing: border-box; color: #8b352c; font-size: 23rpx; line-height: 32rpx; text-align: center; }
+.login-action { position: absolute; top: 1176rpx; left: 205rpx; width: 515rpx; height: 90rpx; margin: 0; padding: 0 12rpx; border-radius: 45rpx; background: #087da9; box-shadow: 0 10rpx 20rpx rgba(3, 96, 135, .18); color: #fff; font-size: 30rpx; font-weight: 700; line-height: 90rpx; }
+.login-action.unavailable, .login-action[disabled] { background: #7b9eaa; color: #fff; box-shadow: none; }
+.login-footer { padding: 0 42rpx 52rpx; padding-bottom: calc(52rpx + env(safe-area-inset-bottom)); text-align: center; }
+.form-footer { padding: 0 0 26rpx; color: #006f9d; font-size: 27rpx; font-weight: 600; }
+.description { color: #36596a; font-size: 24rpx; line-height: 1.5; }
+.future-note { margin-top: 16rpx; color: #496a79; font-size: 22rpx; line-height: 1.5; }
+.privacy { margin-top: 26rpx; color: #006f9d; font-size: 24rpx; }
